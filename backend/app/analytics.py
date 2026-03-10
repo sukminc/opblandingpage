@@ -68,8 +68,8 @@ def get_positional_stats(db: Session, hero_name: Optional[str] = None) -> pd.Dat
             hands=("result_bb", "count"),
             avg_result_bb=("result_bb", "mean"),
             total_result_bb=("result_bb", "sum"),
-            vpip=("action", lambda x: (x != "fold").mean()),
-            fold_rate=("action", lambda x: (x == "fold").mean()),
+            vpip=("action", lambda x: (x != "folds").mean()),
+            fold_rate=("action", lambda x: (x == "folds").mean()),
         )
         .reset_index()
     )
