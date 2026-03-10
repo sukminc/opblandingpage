@@ -1,8 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { ArrowUpRight, Flame, Check } from "lucide-react";
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { ArrowUpRight } from "lucide-react";
 import { projects, type Project, type ProjectStatus } from "../data/projects";
+
+const BMAC = "https://buymeacoffee.com/chris.yoon";
 
 const statusConfig: Record<ProjectStatus, { label: string; color: string; dot: string }> = {
   live:     { label: "Live",     color: "text-emerald-400", dot: "bg-emerald-400" },
@@ -19,105 +22,120 @@ const FILTERS: { key: FilterKey; match: string[] }[] = [
   { key: "Automation", match: ["Python", "pytest", "AI APIs", "SDK Engineering", "Automation"] },
 ];
 
+const FUNDING_TIERS = [
+  { label: "FOLD",     sub: "Not interested",      amount: null,  style: "text-[#444] border-[#1a1a1a] hover:border-[#333] hover:text-[#666]" },
+  { label: "Check",   sub: "$10 — I'd use this",   amount: 10,   style: "text-[#888] border-[#2a2a2a] hover:border-[#555] hover:text-white" },
+  { label: "Call",    sub: "$20 — Build this",      amount: 20,   style: "text-white border-[#007AFF]/40 hover:border-[#007AFF] hover:bg-[#007AFF]/10" },
+  { label: "10x Raise", sub: "$100+ — Need this ASAP", amount: 100, style: "text-[#007AFF] border-[#007AFF]/60 hover:border-[#007AFF] hover:bg-[#007AFF]/20 font-semibold" },
+  { label: "All-In",  sub: "$1,000 — Sponsor",     amount: 1000, style: "text-amber-400 border-amber-500/40 hover:border-amber-400 hover:bg-amber-500/10 font-semibold" },
+];
+
 function ProjectCard({ project }: { project: Project }) {
-  const [count, setCount]         = useState(project.seed);
-  const [voted, setVoted]         = useState(false);
-  const [animating, setAnimating] = useState(false);
-
-  const storageKey = `interest_${project.slug}`;
-
-  useEffect(() => {
-    if (localStorage.getItem(storageKey) === "1") setVoted(true);
-  }, [storageKey]);
-
-  function handleInterest() {
-    if (voted) return;
-    setAnimating(true);
-    setTimeout(() => setAnimating(false), 600);
-    setCount((n) => n + 1);
-    setVoted(true);
-    localStorage.setItem(storageKey, "1");
-  }
-
+  const [flipped, setFlipped] = useState(false);
   const cfg = statusConfig[project.status];
+
+  function handleFund(amount: number | null) {
+    if (amount === null) {
+      setFlipped(false);
+      return;
+    }
+    window.open(`${BMAC}?amount=${amount}`, "_blank", "noopener,noreferrer");
+  }
 
   return (
     <div
-      className={`relative flex flex-col border rounded-xl p-6 bg-black transition-all duration-300 hover:bg-[#050505] group ${
-        project.featured
-          ? "border-[#007AFF]/30 md:col-span-2"
-          : "border-[#1a1a1a]"
-      }`}
+      className={`relative ${project.featured ? "md:col-span-2" : ""}`}
+      style={{ perspective: "1200px", minHeight: "320px" }}
+      onMouseEnter={() => setFlipped(true)}
+      onMouseLeave={() => setFlipped(false)}
     >
-      {/* Status */}
-      <div className="flex items-center justify-between mb-5">
-        <div className="flex items-center gap-1.5">
-          <span className={`w-1.5 h-1.5 rounded-full ${cfg.dot}`} />
-          <span className={`text-xs font-mono ${cfg.color}`}>{cfg.label}</span>
+      <motion.div
+        className="relative w-full h-full"
+        style={{ transformStyle: "preserve-3d" }}
+        animate={{ rotateY: flipped ? 180 : 0 }}
+        transition={{ duration: 0.45, ease: [0.4, 0, 0.2, 1] }}
+      >
+        {/* ── FRONT ── */}
+        <div
+          className={`absolute inset-0 flex flex-col border rounded-xl p-6 bg-black ${
+            project.featured ? "border-[#007AFF]/30" : "border-[#1a1a1a]"
+          }`}
+          style={{ backfaceVisibility: "hidden" }}
+        >
+          {/* Status row */}
+          <div className="flex items-center justify-between mb-5">
+            <div className="flex items-center gap-1.5">
+              <span className={`w-1.5 h-1.5 rounded-full ${cfg.dot}`} />
+              <span className={`text-xs font-mono ${cfg.color}`}>{cfg.label}</span>
+            </div>
+            {project.url && (
+              <a
+                href={project.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="w-7 h-7 rounded-md border border-[#2a2a2a] flex items-center justify-center text-[#555] hover:border-[#007AFF] hover:text-[#007AFF] transition-all"
+              >
+                <ArrowUpRight size={13} />
+              </a>
+            )}
+          </div>
+
+          {/* Content */}
+          <div className="flex-1 mb-6">
+            <h3 className="text-lg font-semibold text-white mb-1 font-mono">
+              {project.title}
+            </h3>
+            <p className="text-sm text-[#007AFF] mb-3">{project.tagline}</p>
+            <p className="text-sm text-[#555] leading-relaxed">{project.description}</p>
+          </div>
+
+          {/* Tags */}
+          <div className="flex flex-wrap gap-1.5 mb-4">
+            {project.tags.map((tag) => (
+              <span
+                key={tag}
+                className="text-[10px] font-mono text-[#444] border border-[#1a1a1a] rounded px-2 py-0.5 uppercase tracking-wider"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+
+          {/* Hover hint */}
+          <p className="text-[10px] font-mono text-[#333] text-center tracking-widest uppercase">
+            hover to fund →
+          </p>
         </div>
 
-        {project.url && (
-          <a
-            href={project.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-7 h-7 rounded-md border border-[#2a2a2a] flex items-center justify-center text-[#555] hover:border-[#007AFF] hover:text-[#007AFF] transition-all opacity-0 group-hover:opacity-100"
-          >
-            <ArrowUpRight size={13} />
-          </a>
-        )}
-      </div>
-
-      {/* Content */}
-      <div className="flex-1 mb-6">
-        <h3 className="text-lg font-semibold text-white mb-1 font-mono">
-          {project.title}
-        </h3>
-        <p className="text-sm text-[#007AFF] mb-3">{project.tagline}</p>
-        <p className="text-sm text-[#555] leading-relaxed">{project.description}</p>
-      </div>
-
-      {/* Tags */}
-      <div className="flex flex-wrap gap-1.5 mb-5">
-        {project.tags.map((tag) => (
-          <span
-            key={tag}
-            className="text-[10px] font-mono text-[#444] border border-[#1a1a1a] rounded px-2 py-0.5 uppercase tracking-wider"
-          >
-            {tag}
-          </span>
-        ))}
-      </div>
-
-      {/* Interest button */}
-      <button
-        onClick={handleInterest}
-        disabled={voted}
-        className={`flex items-center justify-between w-full rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200 border ${
-          voted
-            ? "border-emerald-500/30 bg-emerald-500/5 text-emerald-400 cursor-default"
-            : "border-[#2a2a2a] bg-[#0a0a0a] text-[#666] hover:border-[#007AFF] hover:text-white hover:bg-[#007AFF]/5 cursor-pointer"
-        }`}
-      >
-        <span className="flex items-center gap-2">
-          {voted ? (
-            <Check size={14} className="text-emerald-400" />
-          ) : (
-            <Flame
-              size={14}
-              className={`transition-transform ${animating ? "scale-125" : ""}`}
-            />
-          )}
-          {voted ? "You're interested" : "I'm interested"}
-        </span>
-        <span
-          className={`font-mono text-xs tabular-nums transition-all duration-300 ${
-            animating ? "text-[#007AFF] scale-110" : ""
-          } ${voted ? "text-emerald-400" : "text-[#444]"}`}
+        {/* ── BACK ── */}
+        <div
+          className={`absolute inset-0 flex flex-col justify-center border rounded-xl p-6 bg-[#030303] ${
+            project.featured ? "border-[#007AFF]/30" : "border-[#1a1a1a]"
+          }`}
+          style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
         >
-          {count}
-        </span>
-      </button>
+          <p className="text-xs font-mono text-[#555] text-center mb-1 tracking-widest uppercase">
+            {project.title}
+          </p>
+          <p className="text-[10px] font-mono text-[#333] text-center mb-5 tracking-widest uppercase">
+            What&apos;s your action?
+          </p>
+
+          <div className="flex flex-col gap-2">
+            {FUNDING_TIERS.map((tier) => (
+              <button
+                key={tier.label}
+                onClick={() => handleFund(tier.amount)}
+                className={`flex items-center justify-between w-full rounded-lg px-4 py-2.5 text-sm border transition-all duration-150 cursor-pointer ${tier.style}`}
+              >
+                <span className="font-mono">{tier.label}</span>
+                <span className="text-[11px] opacity-70">{tier.sub}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </motion.div>
     </div>
   );
 }
@@ -141,12 +159,11 @@ export default function Projects() {
             Projects
           </span>
           <h2 className="text-3xl md:text-4xl font-bold mt-3 tracking-tight text-white">
-            What I&apos;m building —{" "}
-            <span className="text-[#333]">vote for what&apos;s next.</span>
+            Hover a card —{" "}
+            <span className="text-[#333]">put money on what matters.</span>
           </h2>
           <p className="text-[#444] mt-3 text-sm">
-            Click &ldquo;I&apos;m interested&rdquo; on anything that resonates. It tells
-            me where to focus.
+            I only build what the market bets on. FOLD, Check, Call, or go All-In.
           </p>
         </div>
 
