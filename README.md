@@ -1,63 +1,73 @@
-# Action Tracker: The 1% Dashboard
+# onepercentbetter.poker
 
-A specialized poker analytics platform designed to transform raw GGPoker hand history logs into actionable behavioral insights. The goal is to facilitate a "1% better every day" growth trajectory by comparing current play against historical data with high-fidelity HUD statistics.
+**GTO Defends. We Exploit.**
 
-## Project Vision
-To provide a modern, industrial-grade dashboard for poker players to identify leaks, analyze positional performance, and track growth over time.
+Data-driven poker exploit quantification platform. Parses GGPoker hand histories, quantifies GTO deviations, and surfaces the exact exploit strategies that maximize bb/100 edge.
 
-## Key Features
-- **Modern Dashboard**: High-fidelity UI with glassmorphism and smooth animations.
-- **Drag & Drop Ingestion**: Dropbox-style hand history upload system.
-- **Hero-Specific HUD**: VPIP, PFR, 3-Bet, C-Bet, Aggression Factor (AF), and Showdown stats (WTSD, W$SD).
-- **Positional Intelligence**: Deep dive into performance across all table seats (Button, Blinds, UTG/MP/CO).
-- **Data Visualization**: Interactive bar charts and radar matrices for behavioral analysis.
+## Stack
 
-## Tech Stack
-- **Frontend**: Next.js, TypeScript, Tailwind CSS, Framer Motion, Recharts, Lucide React.
-- **Backend**: FastAPI (Python), SQLAlchemy, SQLite, Pydantic.
-- **Parser**: Custom regex-based state-tracking engine for GGPoker logs.
+| Layer | Tech |
+|---|---|
+| Frontend | Next.js 16 (App Router), Tailwind CSS, Lucide React |
+| Backend | FastAPI, SQLAlchemy, SQLite, Pandas/NumPy |
+| Deployment | Vercel (frontend), any ASGI host (backend) |
 
 ## Quick Start
 
-### Backend (API)
+### Backend
 ```bash
 cd backend
-python3 -m venv .venv
-source .venv/bin/activate
+python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 uvicorn app.main:app --reload
+# API → http://localhost:8000
+# Docs → http://localhost:8000/docs
 ```
-The API will be available at `http://localhost:8000`.
 
-### Frontend (UI)
+### Frontend
 ```bash
 cd frontend
 npm install
 npm run dev
+# UI → http://localhost:3000
 ```
-The dashboard will be available at `http://localhost:3000`.
 
-## Directory Structure
+## Structure
 ```
-backend/          # FastAPI service, parser, and analytics
+backend/
   app/
-    main.py       # API entrypoint & routes
-    parser.py     # GGPoker log parsing logic
-    analytics.py  # HUD stat calculation engine
-    db.py         # SQLAlchemy models & DB config
-    models.py     # Pydantic schemas
-  tests/          # Unit and integration tests
-frontend/         # Next.js React dashboard
-  pages/          # UI routes and components
-testdata/         # (Git ignored) Local hand-history logs for testing
+    main.py       # FastAPI routes
+    parser.py     # GGPoker hand history parser
+    analytics.py  # Positional stats & exploit signals
+    models.py     # SQLAlchemy ORM models
+    db.py         # DB engine & session
+  tests/
+frontend/
+  app/
+    page.tsx      # Landing page
+    components/   # Navbar, Hero, About, Roadmap, FundingCTA, Footer
+    layout.tsx
+testdata/         # GGPoker .txt files (git-ignored)
 ```
 
-## Testing
-Run backend tests:
+## API Endpoints
+
+| Method | Path | Description |
+|---|---|---|
+| GET | `/health` | Service health check |
+| POST | `/ingest` | Upload GGPoker .txt hand history |
+| GET | `/tournaments` | List all tournaments |
+| PATCH | `/tournaments/{id}` | Update result/finish position |
+| GET | `/analytics/signals` | Top-level exploit edge metrics |
+| GET | `/analytics/positional` | Stats broken down by position |
+| GET | `/analytics/pnl` | Cumulative P&L over time |
+
+## Tests
 ```bash
 cd backend
-PYTHONPATH=. pytest
+PYTHONPATH=. pytest -v
 ```
 
 ---
-© 2026 ONE PERCENT BETTER. All rights reserved.
+
+© 2026 onepercentbetter.poker

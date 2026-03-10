@@ -1,31 +1,51 @@
-from app.parser import parse_hand_history
+from app.parser import parse_filename, split_hands, parse_hand
 
-def test_parse_hand_history():
-    raw_content = """#Game No : G123456789
-#Table Name : Table Blue
-#Game Type : No Limit Hold'em
-#Stakes : $0.05/$0.10
-Player 1 posts small blind $0.05
-Player 2 posts big blind $0.10
-...
 
-#Game No : G987654321
-#Table Name : Table Red
-#Game Type : No Limit Hold'em
-#Stakes : $0.10/$0.20
-Player 3 posts small blind $0.10
-Player 4 posts big blind $0.20
-...
+def test_parse_filename_basic():
+    result = parse_filename("GG20260102-0122 - #19 26 The Year Begins.txt")
+    assert result["gg_id"] == "GG20260102-0122"
+    assert "Year Begins" in result["name"]
+    assert result["date"].year == 2026
+
+
+def test_parse_filename_bounty():
+    result = parse_filename("GG20260103-0233 - Mini Friday Night Fight 25 [Bounty 6-Max].txt")
+    assert result["gg_id"] == "GG20260103-0233"
+    assert result["bounty"] > 0
+    assert "Bounty" in result["format"]
+
+
+def test_split_hands_empty():
+    assert split_hands("") == []
+
+
+def test_split_hands_single():
+    text = """Poker Hand #RC1234-56789: Tournament #999, $1/$2 No Limit Hold'em - 2026/01/02 01:22:00
+Seat 1: Hero (5000 in chips)
+*** HOLE CARDS ***
+Dealt to Hero [Ah Kd]
+Hero: folds
+*** SUMMARY ***
 """
-    hands = parse_hand_history(raw_content)
-    
-    assert len(hands) == 2
-    assert hands[0]["game_no"] == "G123456789"
-    assert hands[0]["table_name"] == "Table Blue"
-    assert hands[0]["game_type"] == "No Limit Hold'em"
-    assert hands[0]["stakes"] == "$0.05/$0.10"
-    
-    assert hands[1]["game_no"] == "G987654321"
-    assert hands[1]["table_name"] == "Table Red"
-    assert hands[1]["game_type"] == "No Limit Hold'em"
-    assert hands[1]["stakes"] == "$0.10/$0.20"
+    blocks = split_hands(text)
+    assert len(blocks) == 1
+
+
+def test_parse_hand_basic():
+    text = """Poker Hand #RC1234-56789: Tournament #999, $1/$2 No Limit Hold'em - 2026/01/02 01:22:00
+Table '999 1' 9-max
+#1 is the button
+Seat 1: Hero (5000 in chips)
+Seat 2: Villain (4000 in chips)
+*** HOLE CARDS ***
+Dealt to Hero [Ah Kd]
+Villain: raises $200 to $400
+Hero: folds
+*** SUMMARY ***
+Villain collected $200
+"""
+    hand = parse_hand(text, hero_name="Hero")
+    assert hand is not None
+    assert hand["hero_name"] == "Hero"
+    assert hand["action"] == "folds"
+    assert hand["action_street"] == "preflop"

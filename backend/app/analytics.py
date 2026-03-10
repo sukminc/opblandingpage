@@ -1,73 +1,116 @@
+"""
+Analytics engine: aggregates hand data into session/positional stats
+and computes exploit edge signals.
+"""
+
+from typing import Optional
+import pandas as pd
+import numpy as np
 from sqlalchemy.orm import Session
-from .db import Hand
-from sqlalchemy import func
-from typing import Dict, Any
+from . import models
 
-def get_hero_stats(db: Session, filters: Dict[str, Any] = None):
+
+def get_tournament_summary(db: Session) -> pd.DataFrame:
+    """Return a DataFrame of all tournaments with P&L."""
+    rows = db.query(models.Tournament).all()
+    if not rows:
+        return pd.DataFrame()
+
+    data = [
+        {
+            "id": t.id,
+            "gg_id": t.gg_id,
+            "name": t.name,
+            "date": t.date,
+            "buy_in": t.buy_in,
+            "bounty": t.bounty,
+            "format": t.format,
+            "finish_position": t.finish_position,
+            "total_players": t.total_players,
+            "net_result": t.net_result,
+        }
+        for t in rows
+    ]
+    df = pd.DataFrame(data)
+    df["date"] = pd.to_datetime(df["date"])
+    df.sort_values("date", inplace=True)
+    df["cumulative_pnl"] = df["net_result"].cumsum()
+    return df
+
+
+def get_positional_stats(db: Session, hero_name: Optional[str] = None) -> pd.DataFrame:
     """
-    Calculates detailed HUD statistics for the Hero.
-    Optional filters (like hero_position) can be applied.
+    Aggregate hand-level data by position.
+    Returns win-rate and action frequency per position.
     """
-    query = db.query(Hand)
-    if filters:
-        for key, value in filters.items():
-            query = query.filter(getattr(Hand, key) == value)
-            
-    total_hands = query.count()
-    if total_hands == 0:
-        return {}
+    q = db.query(models.Hand)
+    if hero_name:
+        q = q.filter(models.Hand.hero_name == hero_name)
 
-    # 1. Pre-Flop Stats
-    vpip_count = query.filter(Hand.hero_vpip == True).count()
-    pfr_count = query.filter(Hand.hero_pfr == True).count()
-    three_bet_count = query.filter(Hand.hero_three_bet == True).count()
-    
-    # 2. Post-Flop Stats
-    saw_flop_count = query.filter(Hand.hero_saw_flop == True).count()
-    cbet_opp_count = query.filter(Hand.hero_c_bet_opp == True).count()
-    cbet_count = query.filter(Hand.hero_c_bet == True).count()
-    
-    # 3. Aggression
-    total_bets = query.with_entities(func.sum(Hand.hero_af_bets)).scalar() or 0
-    total_calls = query.with_entities(func.sum(Hand.hero_af_calls)).scalar() or 0
-    af = round(total_bets / total_calls, 2) if total_calls > 0 else total_bets
+    rows = q.all()
+    if not rows:
+        return pd.DataFrame()
 
-    # 4. Showdown Stats
-    wtsd_count = query.filter(Hand.hero_saw_showdown == True).count()
-    wsd_count = query.filter(Hand.hero_won_at_showdown == True).count()
+    data = [
+        {
+            "position": h.position,
+            "action": h.action,
+            "result_bb": h.result_bb or 0.0,
+            "stack_bb": h.stack_bb or 0.0,
+        }
+        for h in rows
+    ]
+    df = pd.DataFrame(data)
+
+    stats = (
+        df.groupby("position")
+        .agg(
+            hands=("result_bb", "count"),
+            avg_result_bb=("result_bb", "mean"),
+            total_result_bb=("result_bb", "sum"),
+            vpip=("action", lambda x: (x != "fold").mean()),
+            fold_rate=("action", lambda x: (x == "fold").mean()),
+        )
+        .reset_index()
+    )
+    stats["avg_result_bb"] = stats["avg_result_bb"].round(2)
+    return stats
+
+
+def get_exploit_signals(db: Session, hero_name: Optional[str] = None) -> dict:
+    """
+    Compute top-level exploit edge signals.
+    Returns a dict with key metrics ready for the dashboard.
+    """
+    pos_stats = get_positional_stats(db, hero_name)
+    tourney_df = get_tournament_summary(db)
+
+    if pos_stats.empty or tourney_df.empty:
+        return {
+            "total_tournaments": 0,
+            "total_pnl": 0.0,
+            "avg_pnl_per_session": 0.0,
+            "best_position": None,
+            "worst_position": None,
+            "overall_vpip": None,
+            "roi_pct": None,
+        }
+
+    total_buy_in = tourney_df["buy_in"].sum()
+    total_pnl = tourney_df["net_result"].sum()
+    roi = (total_pnl / total_buy_in * 100) if total_buy_in > 0 else 0.0
+
+    best = pos_stats.loc[pos_stats["avg_result_bb"].idxmax()]
+    worst = pos_stats.loc[pos_stats["avg_result_bb"].idxmin()]
+
+    overall_vpip = pos_stats["vpip"].mean() if not pos_stats.empty else None
 
     return {
-        "summary": {
-            "total_hands": total_hands,
-            "win_rate": round((query.filter(Hand.hero_result > 0).count() / total_hands) * 100, 2),
-            "net_result": query.with_entities(func.sum(Hand.hero_result)).scalar() or 0
-        },
-        "preflop": {
-            "vpip": round((vpip_count / total_hands) * 100, 2),
-            "pfr": round((pfr_count / total_hands) * 100, 2),
-            "three_bet": round((three_bet_count / total_hands) * 100, 2),
-        },
-        "postflop": {
-            "cbet": round((cbet_count / cbet_opp_count) * 100, 2) if cbet_opp_count > 0 else 0,
-            "af": af,
-        },
-        "showdown": {
-            "wtsd": round((wtsd_count / saw_flop_count) * 100, 2) if saw_flop_count > 0 else 0,
-            "wsd": round((wsd_count / wtsd_count) * 100, 2) if wtsd_count > 0 else 0,
-        }
+        "total_tournaments": int(len(tourney_df)),
+        "total_pnl": round(float(total_pnl), 2),
+        "avg_pnl_per_session": round(float(tourney_df["net_result"].mean()), 2),
+        "best_position": {"position": best["position"], "avg_bb": float(best["avg_result_bb"])},
+        "worst_position": {"position": worst["position"], "avg_bb": float(worst["avg_result_bb"])},
+        "overall_vpip": round(float(overall_vpip) * 100, 1) if overall_vpip is not None else None,
+        "roi_pct": round(roi, 1),
     }
-
-def get_positional_stats(db: Session):
-    """
-    Returns a dictionary of stats broken down by Hero's position.
-    """
-    positions = db.query(Hand.hero_position).distinct().all()
-    breakdown = {}
-    
-    for pos_tuple in positions:
-        pos_name = pos_tuple[0]
-        if not pos_name:
-            continue
-        breakdown[pos_name] = get_hero_stats(db, filters={"hero_position": pos_name})
-        
-    return breakdown
