@@ -19,12 +19,12 @@ export default function Navbar() {
       }`}
     >
       <div className="max-w-5xl mx-auto px-6 h-14 flex items-center justify-between">
-        <div className="flex items-center gap-2.5">
-          <div className="w-6 h-6 rounded-md bg-[#5E5CE6]/20 border border-[#5E5CE6]/30 flex items-center justify-center">
-            <span className="text-[#5E5CE6] font-bold text-[9px]">1%</span>
-          </div>
-          <span className="text-sm text-[#8A8B97]">onepercentbetter</span>
-        </div>
+        <img
+          src="/logo.png"
+          alt="onepercentbetter.poker"
+          className="h-8 w-auto"
+          style={{ filter: "invert(1) hue-rotate(180deg)", opacity: 0.9 }}
+        />
 
         <div className="flex items-center gap-6">
           <a href="#projects" className="text-sm text-[#8A8B97] hover:text-[#F7F8F8] transition-colors">

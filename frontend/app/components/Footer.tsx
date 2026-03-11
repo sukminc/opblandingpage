@@ -4,9 +4,15 @@ export default function Footer() {
   return (
     <footer className="border-t border-[#232329] py-8 px-6">
       <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-        <p className="text-xs text-[#4B4C58]">
-          © {new Date().getFullYear()} Chris S. Yoon
-        </p>
+        <div className="flex items-center gap-3">
+          <img
+            src="/logo.png"
+            alt="onepercentbetter.poker"
+            className="h-5 w-auto"
+            style={{ filter: "invert(1) hue-rotate(180deg)", opacity: 0.35 }}
+          />
+          <p className="text-xs text-[#4B4C58]">© {new Date().getFullYear()} Chris S. Yoon</p>
+        </div>
         <div className="flex items-center gap-5">
           <a
             href="https://linkedin.com/in/sukminyoon"
