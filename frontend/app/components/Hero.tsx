@@ -39,16 +39,16 @@ export default function Hero() {
 
         {/* Headline */}
         <h1 className="text-6xl md:text-8xl font-bold tracking-tight leading-[1.02] mb-6">
-          GTO Defends.
+          Marginal gains.
           <br />
-          <span className="text-[#5E5CE6]">We Exploit.</span>
+          <span className="text-[#5E5CE6]">Exponential results.</span>
         </h1>
 
         {/* Description */}
         <p className="text-lg text-[#8A8B97] max-w-xl leading-relaxed mb-5">
-          Quantify opponent deviations from GTO equilibrium and turn them into
-          actionable edge. Parses GGPoker hand histories, surfaces bb/100 exploit
-          signals by position — with an LLM agent layer in active development.
+          Every system has inefficiencies. Every market has edges.
+          We build data tools that find them — and compound the advantage
+          1% at a time.
         </p>
 
         {/* Byline */}

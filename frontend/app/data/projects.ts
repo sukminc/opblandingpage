@@ -17,9 +17,9 @@ export const projects: Project[] = [
   {
     slug: "onepercentbetter",
     title: "onepercentbetter",
-    tagline: "GTO Deviation & Exploit Analytics Platform",
+    tagline: "Performance Analytics & Edge Intelligence Platform",
     description:
-      "End-to-end system ingesting GGPoker hand histories into a FastAPI analytics engine (Pandas/NumPy) that quantifies GTO deviations, scores player tendencies, and surfaces positional exploit signals. Architected for LLM agent integration: deviation signals feed an AI recommendation engine generating exploit strategies — the core agentic decision loop driving real edge.",
+      "End-to-end analytics platform built on FastAPI + Pandas/NumPy that quantifies behavioral deviations from optimal baselines, scores tendency patterns, and surfaces positional exploit signals. Architected for LLM agent integration: deviation signals feed an AI recommendation engine that generates actionable edge — the core agentic decision loop.",
     status: "building",
     tags: ["Next.js", "FastAPI", "SQLAlchemy", "Pandas", "NumPy", "Vercel"],
     url: "https://onepercentbetter.poker",
@@ -42,7 +42,7 @@ export const projects: Project[] = [
   {
     slug: "actionkeeper",
     title: "ActionKeeper",
-    tagline: "Full-Stack Staking Agreement Platform",
+    tagline: "Full-Stack Agreement & Negotiation Platform",
     description:
       "FastAPI + PostgreSQL with Clean Architecture (Service/Repository layers); tamper-evident SHA-256 receipt hashing and dual-confirmation negotiation engine with full persistent audit trail. Turn-based Accept/Counter/Decline workflow with visual term diffs, side-by-side counter-offer comparison, and real-time payout previews.",
     status: "building",
