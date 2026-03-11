@@ -6,8 +6,28 @@ export default function Hero() {
   return (
     <section className="relative min-h-screen flex flex-col justify-center pt-16 px-6 overflow-hidden">
 
-      {/* Background glow */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] rounded-full bg-[#5E5CE6]/10 blur-[120px] pointer-events-none" />
+      {/* Spectral node background */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          backgroundImage: "url('/hero-bg.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "center right",
+          backgroundRepeat: "no-repeat",
+          opacity: 0.72,
+        }}
+      />
+
+      {/* Fade left so headline stays readable */}
+      <div className="absolute inset-0 pointer-events-none"
+        style={{
+          background: "linear-gradient(to right, #0D0D11 28%, transparent 65%, #0D0D11 98%)",
+        }}
+      />
+      {/* Fade bottom into projects section */}
+      <div className="absolute bottom-0 left-0 right-0 h-40 pointer-events-none"
+        style={{ background: "linear-gradient(to bottom, transparent, #0D0D11)" }}
+      />
 
       <div className="relative max-w-5xl mx-auto w-full">
 
