@@ -11,11 +11,13 @@ export interface Project {
   featured?: boolean;
   seed: number;
   mvpProgress: number; // 0–100
+  repoName?: string;   // GitHub repo name under sukminc/ (omit if no repo)
 }
 
 export const projects: Project[] = [
   {
     slug: "onepercentbetter",
+    repoName: "one-percent-better",
     title: "onepercentbetter",
     tagline: "Performance Analytics & Edge Intelligence Platform",
     description:
@@ -29,6 +31,7 @@ export const projects: Project[] = [
   },
   {
     slug: "bluejays-moneyball",
+    repoName: "bluejays-financial-mlops",
     title: "Blue Jays Moneyball ETL",
     tagline: "Production-Grade ELT & Self-Validating Pipeline",
     description:
@@ -41,6 +44,7 @@ export const projects: Project[] = [
   },
   {
     slug: "actionkeeper",
+    repoName: "action-keeper",
     title: "ActionKeeper",
     tagline: "Full-Stack Agreement & Negotiation Platform",
     description:
@@ -53,6 +57,7 @@ export const projects: Project[] = [
   },
   {
     slug: "onepercent-focus",
+    repoName: "OneBetterFocus",
     title: "1% Better Focus",
     tagline: "Minimalist Deep-Work Timer for iOS, Android & Web",
     description:
@@ -65,6 +70,7 @@ export const projects: Project[] = [
   },
   {
     slug: "twelvelabs-validator",
+    repoName: "TwelveLabs",
     title: "TwelveLabs API Validator",
     tagline: "Multimodal Search Validation Framework",
     description:

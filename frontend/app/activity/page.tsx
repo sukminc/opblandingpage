@@ -8,14 +8,10 @@ import { GitCommitHorizontal, GitBranch, ExternalLink, RefreshCw, Clock, AlertCi
 
 const GH_OWNER = "sukminc";
 
-// Map slug → actual GitHub repo name
-const REPO_MAP: Record<string, string> = {
-  "onepercentbetter":     "one-percent-better",
-  "bluejays-moneyball":   "bluejays-financial-mlops",
-  "actionkeeper":         "action-keeper",
-  "onepercent-focus":     "OneBetterFocus",
-  "twelvelabs-validator": "TwelveLabs",
-};
+// Derived from projects.ts — add repoName there to surface a project here
+const REPO_MAP: Record<string, string> = Object.fromEntries(
+  projects.filter((p) => p.repoName).map((p) => [p.slug, p.repoName!])
+);
 
 interface Commit {
   sha:     string;

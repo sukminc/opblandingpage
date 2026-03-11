@@ -1,5 +1,6 @@
 import { ArrowLeft, ArrowUpRight, MapPin, Mail, Github, Linkedin } from "lucide-react";
 import Link from "next/link";
+import { SKILL_GROUPS, ICON_MAP, ALL_PROJECT_TECH } from "../data/skills";
 
 const experience = [
   {
@@ -75,32 +76,24 @@ const experience = [
   },
 ];
 
-const skills = [
-  {
-    label: "Data Engineering",
-    items: ["Apache Airflow", "ETL/ELT Pipeline Design", "Data Lakehouse", "Star Schema", "Data Observability", "Fail-Fast DQ Gates", "Schema Drift Handling"],
-  },
-  {
-    label: "Languages & Libraries",
-    items: ["Python", "SQL", "TypeScript", "Pandas", "NumPy", "SQLAlchemy", "FastAPI", "Pydantic", "Pytest"],
-  },
-  {
-    label: "Cloud & Infrastructure",
-    items: ["GCP (BigQuery, GCS)", "AWS (S3, Redshift, Glue)", "PostgreSQL", "SQLite", "Docker", "GitHub Actions", "Jenkins"],
-  },
-  {
-    label: "AI / Agentic Systems",
-    items: ["Claude API (Anthropic)", "OpenAI Agent SDK", "LangChain", "Agentic Orchestration", "LLM Pipeline Integration"],
-  },
-  {
-    label: "Observability & Tools",
-    items: ["DataDog", "Schema Drift Detection", "Alembic", "Pydantic Contracts", "Git", "Stripe API"],
-  },
-  {
-    label: "Frontend",
-    items: ["React / Next.js", "TypeScript", "Tailwind CSS", "Framer Motion", "Responsive Design"],
-  },
-];
+function SkillBadge({ name }: { name: string }) {
+  const icon = ICON_MAP[name];
+  return (
+    <span className="inline-flex items-center gap-1.5 text-[10px] text-[#8A8B97] bg-[#1C1C1F] border border-[#232329] rounded-md px-2 py-1 hover:border-[#5E5CE6]/30 hover:text-[#F7F8F8] transition-all">
+      {icon && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={`https://cdn.simpleicons.org/${icon.slug}/${icon.hex}`}
+          alt={name}
+          width={11}
+          height={11}
+          className="w-[11px] h-[11px]"
+        />
+      )}
+      {name}
+    </span>
+  );
+}
 
 export default function AboutPage() {
   return (
@@ -194,26 +187,35 @@ export default function AboutPage() {
           </div>
         </div>
 
-        {/* Skills */}
+        {/* Technical Skills */}
         <div className="mb-14">
           <p className="text-xs text-[#8A8B97] mb-6">Technical Skills</p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {skills.map((group) => (
+            {SKILL_GROUPS.map((group) => (
               <div key={group.label} className="border border-[#232329] rounded-xl p-4 bg-[#161618]">
                 <p className="text-xs text-[#4B4C58] mb-3">{group.label}</p>
                 <div className="flex flex-wrap gap-1.5">
-                  {group.items.map((item) => (
-                    <span
-                      key={item}
-                      className="text-[10px] text-[#8A8B97] bg-[#1C1C1F] border border-[#232329] rounded-md px-2 py-0.5 hover:border-[#5E5CE6]/30 hover:text-[#F7F8F8] transition-all"
-                    >
-                      {item}
-                    </span>
+                  {group.items.map((name) => (
+                    <SkillBadge key={name} name={name} />
                   ))}
                 </div>
               </div>
             ))}
+          </div>
+
+          {/* Live from Projects — auto-synced from projects.ts → skills.ts */}
+          <div className="mt-3 border border-[#5E5CE6]/20 rounded-xl p-4 bg-[#5E5CE6]/5">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#5E5CE6] animate-pulse" />
+              <p className="text-xs text-[#5E5CE6]">Live from Projects</p>
+              <span className="text-[9px] text-[#4B4C58] ml-auto">auto-synced · updates when a project is added</span>
+            </div>
+            <div className="flex flex-wrap gap-1.5">
+              {ALL_PROJECT_TECH.map((name) => (
+                <SkillBadge key={name} name={name} />
+              ))}
+            </div>
           </div>
         </div>
 

@@ -1,57 +1,22 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { ArrowUpRight, GitCommitHorizontal, Clock } from "lucide-react";
 import { projects, type Project, type ProjectStatus } from "../data/projects";
+import { ICON_MAP, TECH_TAGS } from "../data/skills";
 
 // ── Constants ────────────────────────────────────────────────────────────────
 
 const BMAC      = "https://buymeacoffee.com/chris.yoon";
 const GH_OWNER  = "sukminc";
 
-const REPO_MAP: Record<string, string> = {
-  "onepercentbetter":     "one-percent-better",
-  "bluejays-moneyball":   "bluejays-financial-mlops",
-  "actionkeeper":         "action-keeper",
-  "onepercent-focus":     "OneBetterFocus",
-  "twelvelabs-validator": "TwelveLabs",
-};
+// Derived from projects.ts — add repoName there to surface GitHub stats here
+const REPO_MAP: Record<string, string> = Object.fromEntries(
+  projects.filter((p) => p.repoName).map((p) => [p.slug, p.repoName!])
+);
 
-// Simple Icons slug + display label + brand hex
-const TECH_ICONS: Record<string, Array<{ slug: string; label: string; hex: string }>> = {
-  "onepercentbetter": [
-    { slug: "nextdotjs",  label: "Next.js",    hex: "FFFFFF" },
-    { slug: "fastapi",    label: "FastAPI",     hex: "009688" },
-    { slug: "python",     label: "Python",      hex: "3776AB" },
-    { slug: "postgresql", label: "PostgreSQL",  hex: "4169E1" },
-    { slug: "vercel",     label: "Vercel",      hex: "FFFFFF" },
-  ],
-  "bluejays-moneyball": [
-    { slug: "python",        label: "Python",      hex: "3776AB" },
-    { slug: "apacheairflow", label: "Airflow",     hex: "017CEE" },
-    { slug: "postgresql",    label: "PostgreSQL",  hex: "4169E1" },
-    { slug: "docker",        label: "Docker",      hex: "2496ED" },
-    { slug: "githubactions", label: "GH Actions",  hex: "2088FF" },
-  ],
-  "actionkeeper": [
-    { slug: "python",     label: "Python",      hex: "3776AB" },
-    { slug: "typescript", label: "TypeScript",  hex: "3178C6" },
-    { slug: "nextdotjs",  label: "Next.js",     hex: "FFFFFF" },
-    { slug: "postgresql", label: "PostgreSQL",  hex: "4169E1" },
-    { slug: "docker",     label: "Docker",      hex: "2496ED" },
-    { slug: "stripe",     label: "Stripe",      hex: "635BFF" },
-  ],
-  "onepercent-focus": [
-    { slug: "flutter",  label: "Flutter",  hex: "02569B" },
-    { slug: "dart",     label: "Dart",     hex: "0175C2" },
-    { slug: "supabase", label: "Supabase", hex: "3ECF8E" },
-  ],
-  "twelvelabs-validator": [
-    { slug: "python", label: "Python", hex: "3776AB" },
-    { slug: "pytest", label: "Pytest", hex: "0A9EDC" },
-  ],
-};
+// Tech stacks now live in skills.ts — TECH_TAGS drives both cards and About page
 
 const statusConfig: Record<ProjectStatus, { label: string; color: string; dot: string }> = {
   live:     { label: "Live",     color: "text-emerald-400", dot: "bg-emerald-400" },
@@ -142,26 +107,31 @@ function timeAgo(iso: string): string {
 // ── Sub-components ───────────────────────────────────────────────────────────
 
 function TechStack({ slug }: { slug: string }) {
-  const icons = TECH_ICONS[slug] ?? [];
+  const tags = TECH_TAGS[slug] ?? [];
   return (
     <div className="flex flex-wrap gap-1.5 mb-4">
-      {icons.map(({ slug: s, label, hex }) => (
-        <span
-          key={s}
-          title={label}
-          className="inline-flex items-center gap-1.5 text-[9px] text-[#6B6C7A] bg-[#1E1E22] border border-[#2A2A30] rounded-md px-2 py-1"
-        >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={`https://cdn.simpleicons.org/${s}/${hex}`}
-            alt={label}
-            width={11}
-            height={11}
-            className="w-[11px] h-[11px]"
-          />
-          {label}
-        </span>
-      ))}
+      {tags.map((name) => {
+        const icon = ICON_MAP[name];
+        return (
+          <span
+            key={name}
+            title={name}
+            className="inline-flex items-center gap-1.5 text-[9px] text-[#6B6C7A] bg-[#1E1E22] border border-[#2A2A30] rounded-md px-2 py-1"
+          >
+            {icon && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={`https://cdn.simpleicons.org/${icon.slug}/${icon.hex}`}
+                alt={name}
+                width={11}
+                height={11}
+                className="w-[11px] h-[11px]"
+              />
+            )}
+            {name}
+          </span>
+        );
+      })}
     </div>
   );
 }
@@ -207,15 +177,20 @@ function GitStats({ slug }: { slug: string }) {
 
 function ProjectCard({ project }: { project: Project }) {
   const [flipped, setFlipped] = useState(false);
+  const isMouse  = useRef(false);
   const cfg      = statusConfig[project.status];
   const featured = project.featured === true;
 
   return (
     <motion.div
+      data-testid="project-card"
+      data-slug={project.slug}
+      data-flipped={flipped ? "true" : "false"}
       className={`relative${featured ? " md:col-span-2" : ""}`}
       style={{ perspective: "1200px" }}
-      onMouseEnter={() => setFlipped(true)}
-      onMouseLeave={() => setFlipped(false)}
+      onMouseEnter={() => { isMouse.current = true; setFlipped(true); }}
+      onMouseLeave={() => { isMouse.current = false; setFlipped(false); }}
+      onClick={() => { if (!isMouse.current) setFlipped((f) => !f); }}
       whileHover={{ y: -6 }}
       transition={{ duration: 0.2, ease: "easeOut" }}
     >
@@ -300,7 +275,8 @@ function ProjectCard({ project }: { project: Project }) {
                 <div className="mt-auto">
                   <GitStats slug={project.slug} />
                   <p className="text-[10px] text-[#4B4C58] text-center tracking-wide mt-3">
-                    hover to fund →
+                    <span className="hidden md:inline">hover to fund →</span>
+                    <span className="md:hidden">tap to fund →</span>
                   </p>
                 </div>
               </>
@@ -333,7 +309,8 @@ function ProjectCard({ project }: { project: Project }) {
               <div className="mt-auto">
                 <GitStats slug={project.slug} />
                 <p className="text-[10px] text-[#4B4C58] text-center tracking-wide mt-4">
-                  hover to fund →
+                  <span className="hidden md:inline">hover to fund →</span>
+                  <span className="md:hidden">tap to fund →</span>
                 </p>
               </div>
             </div>
@@ -345,7 +322,16 @@ function ProjectCard({ project }: { project: Project }) {
           className="[grid-area:1/1] flex flex-col justify-center rounded-2xl p-6 bg-[#161618] border border-[#5E5CE6]/50 shadow-[0_0_30px_rgba(94,92,230,0.12)]"
           style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
         >
-          <p className="text-sm text-[#8A8B97] text-center mb-1">{project.title}</p>
+          <div className="flex items-center justify-between mb-1">
+            <p className="text-sm text-[#8A8B97] flex-1 text-center">{project.title}</p>
+            <button
+              onClick={(e) => { e.stopPropagation(); setFlipped(false); }}
+              className="md:hidden text-[#4B4C58] hover:text-[#8A8B97] transition-colors text-lg leading-none -mr-1"
+              aria-label="Close"
+            >
+              ×
+            </button>
+          </div>
           <p className="text-xs text-[#4B4C58] text-center mb-6">What&apos;s your action?</p>
 
           <div className={`flex flex-col gap-2 ${featured ? "md:max-w-sm md:mx-auto md:w-full" : ""}`}>
