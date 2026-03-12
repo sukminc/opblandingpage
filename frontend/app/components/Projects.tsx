@@ -81,14 +81,14 @@ function ProjectCard({ project }: { project: Project }) {
             ))}
           </div>
 
-          {/* Hero tier — Over Shove */}
+          {/* Hero tier — Over Bet */}
           <button
             onClick={() => handleFund(500)}
             className="w-full rounded-xl border border-amber-500/40 bg-amber-500/5 hover:bg-amber-500/10 hover:border-amber-400 transition-all duration-150 cursor-pointer px-4 py-3 text-left group"
           >
             <div className="flex items-center justify-between">
               <div>
-                <span className="text-sm font-semibold text-amber-400">Over Shove · $500</span>
+                <span className="text-sm font-semibold text-amber-400">Over Bet · $500</span>
                 <p className="text-[11px] text-[#4B4C58] mt-0.5 group-hover:text-[#8A8B97] transition-colors">
                   Most players fold here. You don&apos;t.
                 </p>

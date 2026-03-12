@@ -18,7 +18,7 @@ const TIERS = [
     hero: false,
   },
   {
-    label: "Over Shove",
+    label: "Over Bet",
     amount: 500,
     desc: "Most players fold here. You don't.",
     hero: false,
