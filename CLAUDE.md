@@ -3,7 +3,7 @@
 ## What this is
 Brand hub + portfolio for **onepercentbetter.poker** (current) → **OnePercentBetter.now** (post-MVP)
 Tagline: "Marginal gains. Exponential results."
-Repo: `opblandingpage` (GitHub) → `one-percent-better` (local)
+Repo: `one-percent-better-landing` (GitHub) → `one-percent-better-landing` (local)
 
 **Rule: If a project is not listed on the site, it is not a brand asset.**
 
