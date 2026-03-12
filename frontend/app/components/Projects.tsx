@@ -1,7 +1,13 @@
 "use client";
 
 import { ArrowUpRight, Clock, ExternalLink, GitBranch } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import {
+  SiNextdotjs, SiFastapi, SiPython, SiPandas, SiNumpy, SiVercel,
+  SiPostgresql, SiDocker, SiApacheairflow, SiGithubactions, SiTypescript,
+  SiFlutter, SiDart, SiSupabase, SiStripe, SiPytest, SiApple, SiAndroid,
+  SiSqlalchemy,
+} from "react-icons/si";
 import { projects, type Project, type ProjectStatus } from "../data/projects";
 
 const BMAC = "https://buymeacoffee.com/chris.yoon";
@@ -36,46 +42,39 @@ const STATUS_BAR: Record<string, string> = {
   idea:     "bg-[#4B4C58]",
 };
 
-// Simple Icons CDN: https://cdn.simpleicons.org/{slug}/{hex-color}
-const TECH_ICONS: Record<string, { slug: string; color: string }> = {
-  "Next.js":              { slug: "nextdotjs",      color: "ffffff" },
-  "FastAPI":              { slug: "fastapi",         color: "009688" },
-  "Python":               { slug: "python",          color: "3776AB" },
-  "Python (FastAPI)":     { slug: "fastapi",         color: "009688" },
-  "TypeScript":           { slug: "typescript",      color: "3178C6" },
-  "TypeScript (Next.js)": { slug: "nextdotjs",       color: "ffffff" },
-  "Pandas":               { slug: "pandas",          color: "9575CD" },
-  "NumPy":                { slug: "numpy",           color: "4DABF7" },
-  "Vercel":               { slug: "vercel",          color: "ffffff" },
-  "PostgreSQL":           { slug: "postgresql",      color: "4169E1" },
-  "Docker":               { slug: "docker",          color: "2496ED" },
-  "Apache Airflow":       { slug: "apacheairflow",   color: "017CEE" },
-  "GitHub Actions":       { slug: "githubactions",   color: "2088FF" },
-  "Flutter":              { slug: "flutter",         color: "54C5F8" },
-  "Dart":                 { slug: "dart",            color: "0175C2" },
-  "Supabase":             { slug: "supabase",        color: "3ECF8E" },
-  "Stripe":               { slug: "stripe",          color: "635BFF" },
-  "Pytest":               { slug: "pytest",          color: "0A9EDC" },
-  "iOS":                  { slug: "apple",           color: "ffffff" },
-  "Android":              { slug: "android",         color: "34A853" },
+type IconComponent = React.ComponentType<{ size?: number; color?: string; className?: string }>;
+
+const TECH_ICONS: Record<string, { Icon: IconComponent; color: string }> = {
+  "Next.js":              { Icon: SiNextdotjs,      color: "#ffffff" },
+  "FastAPI":              { Icon: SiFastapi,         color: "#009688" },
+  "Python":               { Icon: SiPython,          color: "#3776AB" },
+  "Python (FastAPI)":     { Icon: SiFastapi,         color: "#009688" },
+  "TypeScript":           { Icon: SiTypescript,      color: "#3178C6" },
+  "TypeScript (Next.js)": { Icon: SiNextdotjs,       color: "#ffffff" },
+  "SQLAlchemy":           { Icon: SiSqlalchemy,      color: "#D71F00" },
+  "Pandas":               { Icon: SiPandas,          color: "#9575CD" },
+  "NumPy":                { Icon: SiNumpy,           color: "#4DABF7" },
+  "Vercel":               { Icon: SiVercel,          color: "#ffffff" },
+  "PostgreSQL":           { Icon: SiPostgresql,      color: "#4169E1" },
+  "Docker":               { Icon: SiDocker,          color: "#2496ED" },
+  "Apache Airflow":       { Icon: SiApacheairflow,   color: "#017CEE" },
+  "GitHub Actions":       { Icon: SiGithubactions,   color: "#2088FF" },
+  "Flutter":              { Icon: SiFlutter,         color: "#54C5F8" },
+  "Dart":                 { Icon: SiDart,            color: "#0175C2" },
+  "Supabase":             { Icon: SiSupabase,        color: "#3ECF8E" },
+  "Stripe":               { Icon: SiStripe,          color: "#635BFF" },
+  "Pytest":               { Icon: SiPytest,          color: "#0A9EDC" },
+  "iOS":                  { Icon: SiApple,           color: "#ffffff" },
+  "Android":              { Icon: SiAndroid,         color: "#34A853" },
 };
 
 function TechBadge({ tag }: { tag: string }) {
-  const icon = TECH_ICONS[tag];
-  if (icon) {
+  const entry = TECH_ICONS[tag];
+  if (entry) {
+    const { Icon, color } = entry;
     return (
-      <div
-        title={tag}
-        className="w-6 h-6 rounded-md bg-[#1C1C1F] border border-[#232329] flex items-center justify-center"
-      >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={`https://cdn.simpleicons.org/${icon.slug}/${icon.color}`}
-          alt={tag}
-          width={14}
-          height={14}
-          loading="lazy"
-        />
+      <div title={tag} className="w-6 h-6 rounded-md bg-[#1C1C1F] border border-[#232329] flex items-center justify-center">
+        <Icon size={13} color={color} />
       </div>
     );
   }
@@ -101,10 +100,6 @@ function timeAgo(iso: string): string {
 function ProjectCard({ project, commitState }: { project: Project; commitState: CommitState }) {
   const cfg = statusConfig[project.status];
   const repoName = REPO_MAP[project.slug];
-
-  function handleFund(amount: number) {
-    window.open(`${BMAC}?amount=${amount}`, "_blank", "noopener,noreferrer");
-  }
 
   return (
     <div className={project.featured ? "md:col-span-2" : ""}>
@@ -178,7 +173,6 @@ function ProjectCard({ project, commitState }: { project: Project; commitState: 
               ))}
             </div>
           )}
-
           {!commitState.loading &&
             commitState.commits.map((c, i) => (
               <a
@@ -188,17 +182,9 @@ function ProjectCard({ project, commitState }: { project: Project; commitState: 
                 rel="noopener noreferrer"
                 className="group flex items-start gap-2.5 py-1.5 hover:bg-white/[0.02] rounded-lg px-1.5 -mx-1.5 transition-colors"
               >
-                <div
-                  className={`mt-1 w-1.5 h-1.5 rounded-full flex-shrink-0 ${
-                    i === 0 ? "bg-[#5E5CE6]" : "bg-[#36363F]"
-                  }`}
-                />
+                <div className={`mt-1 w-1.5 h-1.5 rounded-full flex-shrink-0 ${i === 0 ? "bg-[#5E5CE6]" : "bg-[#36363F]"}`} />
                 <div className="flex-1 min-w-0">
-                  <p
-                    className={`text-xs truncate leading-snug ${
-                      i === 0 ? "text-[#F7F8F8]" : "text-[#8A8B97]"
-                    } group-hover:text-[#F7F8F8] transition-colors`}
-                  >
+                  <p className={`text-xs truncate leading-snug ${i === 0 ? "text-[#F7F8F8]" : "text-[#8A8B97]"} group-hover:text-[#F7F8F8] transition-colors`}>
                     {c.message.split("\n")[0]}
                   </p>
                   <div className="flex items-center gap-1.5 mt-0.5">
@@ -210,10 +196,7 @@ function ProjectCard({ project, commitState }: { project: Project; commitState: 
                     </span>
                   </div>
                 </div>
-                <ExternalLink
-                  size={10}
-                  className="mt-1 flex-shrink-0 text-[#4B4C58] opacity-0 group-hover:opacity-100 transition-opacity"
-                />
+                <ExternalLink size={10} className="mt-1 flex-shrink-0 text-[#4B4C58] opacity-0 group-hover:opacity-100 transition-opacity" />
               </a>
             ))}
         </div>
@@ -225,37 +208,16 @@ function ProjectCard({ project, commitState }: { project: Project; commitState: 
           ))}
         </div>
 
-        {/* Funding tiers */}
-        <div className="flex flex-col gap-1.5">
-          <div className="grid grid-cols-2 gap-1.5">
-            {[
-              { label: "Open",  amount: 30,  style: "text-[#8A8B97] border-[#232329] hover:border-[#36363F] hover:text-[#F7F8F8]" },
-              { label: "3-Bet", amount: 150, style: "text-[#F7F8F8] border-[#5E5CE6]/30 hover:border-[#5E5CE6] hover:bg-[#5E5CE6]/10" },
-            ].map((tier) => (
-              <button
-                key={tier.label}
-                onClick={() => handleFund(tier.amount)}
-                className={`rounded-xl py-2 text-xs border transition-all duration-150 cursor-pointer text-center ${tier.style}`}
-              >
-                {tier.label} · ${tier.amount}
-              </button>
-            ))}
-          </div>
-          <button
-            onClick={() => handleFund(500)}
-            className="w-full rounded-xl border border-amber-500/40 bg-amber-500/5 hover:bg-amber-500/10 hover:border-amber-400 transition-all duration-150 cursor-pointer px-4 py-3 text-left group"
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <span className="text-sm font-semibold text-amber-400">Over Bet · $500</span>
-                <p className="text-[11px] text-[#4B4C58] mt-0.5 group-hover:text-[#8A8B97] transition-colors">
-                  Most players fold here. You don&apos;t.
-                </p>
-              </div>
-              <ArrowUpRight size={14} className="text-amber-500/50 group-hover:text-amber-400 transition-colors shrink-0" />
-            </div>
-          </button>
-        </div>
+        {/* Single fund CTA → scrolls to #fund */}
+        <a
+          href="#fund"
+          className="flex items-center justify-between w-full rounded-xl border border-[#232329] hover:border-[#5E5CE6]/40 bg-[#1C1C1F] hover:bg-[#5E5CE6]/5 px-4 py-3 transition-all group"
+        >
+          <span className="text-sm text-[#8A8B97] group-hover:text-[#F7F8F8] transition-colors">
+            Back this build
+          </span>
+          <ArrowUpRight size={14} className="text-[#4B4C58] group-hover:text-[#5E5CE6] transition-colors" />
+        </a>
       </div>
     </div>
   );
@@ -264,63 +226,55 @@ function ProjectCard({ project, commitState }: { project: Project; commitState: 
 export default function Projects() {
   const [commitMap, setCommitMap] = useState<Record<string, CommitState>>(() =>
     Object.fromEntries(
-      projects.map((p) => [
-        p.slug,
-        { commits: [], totalCount: null, loading: !!REPO_MAP[p.slug] },
-      ])
+      projects.map((p) => [p.slug, { commits: [], totalCount: null, loading: !!REPO_MAP[p.slug] }])
     )
   );
+
+  // Stable sort order — set once when commits first arrive, never re-shuffled
+  const sortedSlugsRef = useRef<string[] | null>(null);
+  const loadedCount = useRef(0);
+  const totalRepos = projects.filter((p) => REPO_MAP[p.slug]).length;
 
   useEffect(() => {
     projects.forEach(async (project) => {
       const repoName = REPO_MAP[project.slug];
       if (!repoName) return;
       try {
-        const res = await fetch(
-          `https://api.github.com/repos/${GH_OWNER}/${repoName}/commits?per_page=3`,
-          { headers: { Accept: "application/vnd.github+json" } }
-        );
-        if (!res.ok) {
-          setCommitMap((prev) => ({
-            ...prev,
-            [project.slug]: { commits: [], totalCount: null, loading: false },
-          }));
-          return;
-        }
-        const linkHeader = res.headers.get("Link") ?? "";
-        const lastMatch = linkHeader.match(/[?&]page=(\d+)>; rel="last"/);
+        const res = await fetch(`/api/commits?repo=${repoName}`);
+        if (!res.ok) throw new Error(`${res.status}`);
         const data = await res.json();
-        const commits: Commit[] = (Array.isArray(data) ? data : []).map(
-          (c: { sha: string; html_url: string; commit: { message: string; author: { date: string } } }) => ({
-            sha:     c.sha,
-            message: c.commit.message,
-            date:    c.commit.author.date,
-            url:     c.html_url,
-          })
-        );
         setCommitMap((prev) => ({
           ...prev,
-          [project.slug]: {
-            commits,
-            totalCount: lastMatch ? parseInt(lastMatch[1], 10) : commits.length,
-            loading: false,
-          },
+          [project.slug]: { commits: data.commits, totalCount: data.totalCount, loading: false },
         }));
       } catch {
         setCommitMap((prev) => ({
           ...prev,
           [project.slug]: { commits: [], totalCount: null, loading: false },
         }));
+      } finally {
+        loadedCount.current += 1;
+        // Lock sort order once all repos have responded
+        if (loadedCount.current >= totalRepos && !sortedSlugsRef.current) {
+          setCommitMap((snap) => {
+            sortedSlugsRef.current = [...projects]
+              .sort((a, b) => {
+                const aDate = snap[a.slug]?.commits[0]?.date ?? "";
+                const bDate = snap[b.slug]?.commits[0]?.date ?? "";
+                return bDate.localeCompare(aDate);
+              })
+              .map((p) => p.slug);
+            return snap;
+          });
+        }
       }
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Sort by most recent commit (falls back to original order while loading)
-  const sorted = [...projects].sort((a, b) => {
-    const aDate = commitMap[a.slug]?.commits[0]?.date ?? "";
-    const bDate = commitMap[b.slug]?.commits[0]?.date ?? "";
-    return bDate.localeCompare(aDate);
-  });
+  const displayOrder = sortedSlugsRef.current
+    ? sortedSlugsRef.current.map((slug) => projects.find((p) => p.slug === slug)!).filter(Boolean)
+    : projects;
 
   return (
     <section id="projects" className="py-24 px-6 border-t border-[#232329]">
@@ -337,13 +291,11 @@ export default function Projects() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {sorted.map((p) => (
+          {displayOrder.map((p) => (
             <ProjectCard
               key={p.slug}
               project={p}
-              commitState={
-                commitMap[p.slug] ?? { commits: [], totalCount: null, loading: false }
-              }
+              commitState={commitMap[p.slug] ?? { commits: [], totalCount: null, loading: false }}
             />
           ))}
         </div>
