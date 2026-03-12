@@ -176,7 +176,7 @@ function ProjectCard({ project, commitState }: { project: Project; commitState: 
             </div>
           )}
           {!commitState.loading &&
-            commitState.commits.map((c, i) => (
+            commitState.commits.slice(0, 1).map((c, i) => (
               <a
                 key={c.sha}
                 href={c.url}

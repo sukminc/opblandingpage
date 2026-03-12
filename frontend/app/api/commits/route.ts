@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
 
   try {
     const res = await fetch(
-      `https://api.github.com/repos/${GH_OWNER}/${repo}/commits?per_page=3`,
+      `https://api.github.com/repos/${GH_OWNER}/${repo}/commits?per_page=1`,
       {
         headers: {
           Accept: "application/vnd.github+json",
