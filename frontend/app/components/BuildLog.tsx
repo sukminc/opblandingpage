@@ -18,16 +18,16 @@ interface Commit {
 }
 
 interface RepoActivity {
-  slug:       string;
-  repoName:   string;
-  title:      string;
-  tagline:    string;
-  status:     string;
+  slug:        string;
+  repoName:    string;
+  title:       string;
+  tagline:     string;
+  status:      string;
   mvpProgress: number;
-  commits:    Commit[];
-  totalCount: number | null;
-  error:      string | null;
-  loading:    boolean;
+  commits:     Commit[];
+  totalCount:  number | null;
+  error:       string | null;
+  loading:     boolean;
 }
 
 function timeAgo(iso: string): string {
@@ -95,7 +95,7 @@ function RepoCard({ repo }: { repo: RepoActivity }) {
       <div className="flex flex-col gap-0.5">
         {repo.loading && (
           <div className="space-y-2 py-1">
-            {[0, 1].map((i) => (
+            {[0, 1, 2].map((i) => (
               <div key={i} className="flex gap-2.5 animate-pulse">
                 <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#232329] flex-shrink-0" />
                 <div className="flex-1 space-y-1.5">
@@ -178,7 +178,7 @@ export default function BuildLog() {
         if (!REPO_MAP[repo.slug]) return;
         try {
           const res = await fetch(
-            `https://api.github.com/repos/${GH_OWNER}/${repo.repoName}/commits?per_page=2`,
+            `https://api.github.com/repos/${GH_OWNER}/${repo.repoName}/commits?per_page=3`,
             { headers: { Accept: "application/vnd.github+json" } }
           );
           if (!res.ok) {
@@ -225,6 +225,13 @@ export default function BuildLog() {
     );
   }, []);
 
+  // Sort by most recent commit date
+  const sorted = [...repos].sort((a, b) => {
+    const aDate = a.commits[0]?.date ?? "";
+    const bDate = b.commits[0]?.date ?? "";
+    return bDate.localeCompare(aDate);
+  });
+
   return (
     <section id="buildlog" className="py-24 px-6 border-t border-[#232329]">
       <div className="max-w-5xl mx-auto">
@@ -232,7 +239,7 @@ export default function BuildLog() {
         <div className="mb-10">
           <div className="flex items-center gap-2 mb-3">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            <p className="text-xs text-[#8A8B97]">Build Log · Live from GitHub</p>
+            <p className="text-xs text-[#8A8B97]">Build Log · Live from GitHub · Sorted by latest activity</p>
           </div>
           <h2 className="text-3xl md:text-4xl font-bold text-[#F7F8F8] tracking-tight">
             Shipping in public.{" "}
@@ -241,7 +248,7 @@ export default function BuildLog() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {repos.map((r) => (
+          {sorted.map((r) => (
             <RepoCard key={r.slug} repo={r} />
           ))}
         </div>
