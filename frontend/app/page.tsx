@@ -3,6 +3,7 @@ import Hero from "./components/Hero";
 import Projects from "./components/Projects";
 import BuildLog from "./components/BuildLog";
 import FundingCTA from "./components/FundingCTA";
+import AboutSection from "./components/AboutSection";
 import Footer from "./components/Footer";
 
 export default function Home() {
@@ -13,6 +14,7 @@ export default function Home() {
       <Projects />
       <BuildLog />
       <FundingCTA />
+      <AboutSection />
       <Footer />
     </main>
   );

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Github, Linkedin } from "lucide-react";
 
 export default function Footer() {
@@ -11,7 +12,9 @@ export default function Footer() {
             className="h-5 w-auto"
             style={{ filter: "invert(1) hue-rotate(180deg)", opacity: 0.35 }}
           />
-          <p className="text-xs text-[#4B4C58]">© {new Date().getFullYear()} Chris S. Yoon</p>
+          <Link href="/about" className="text-xs text-[#4B4C58] hover:text-[#8A8B97] transition-colors">
+            © {new Date().getFullYear()} Chris S. Yoon
+          </Link>
         </div>
         <div className="flex items-center gap-5">
           <a

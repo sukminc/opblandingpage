@@ -80,10 +80,10 @@ function RepoCard({ repo }: { repo: RepoActivity }) {
       {/* Progress */}
       <div>
         <div className="flex justify-between text-[10px] text-[#4B4C58] mb-1.5">
-          <span className="truncate pr-2">{repo.tagline}</span>
-          <span className="flex-shrink-0">{repo.mvpProgress === 100 ? "Live ✓" : `${repo.mvpProgress}%`}</span>
+          <span>MVP Progress</span>
+          <span className="flex-shrink-0 font-medium">{repo.mvpProgress === 100 ? "Live ✓" : `${repo.mvpProgress}%`}</span>
         </div>
-        <div className="h-1 bg-[#232329] rounded-full overflow-hidden">
+        <div className="h-1.5 bg-[#232329] rounded-full overflow-hidden">
           <div
             className={`h-full rounded-full transition-all duration-700 ${STATUS_BAR[repo.status] ?? "bg-[#4B4C58]"}`}
             style={{ width: `${repo.mvpProgress}%` }}
