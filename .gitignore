@@ -31,3 +31,6 @@ yarn-error.log*
 .env*.local
 resume/
 frontend/public/resume/
+frontend/playwright-report/
+frontend/test-results/
+tmp/
