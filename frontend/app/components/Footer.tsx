@@ -8,12 +8,11 @@ export default function Footer() {
       <div className="relative max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <Image
-            src="/logo.png"
+            src="/logo.svg"
             alt="onepercentbetter.poker"
-            className="h-5 w-auto"
-            style={{ filter: "invert(1) hue-rotate(180deg)", opacity: 0.35 }}
-            width={96}
-            height={20}
+            className="h-8 w-8"
+            width={32}
+            height={32}
           />
           <Link href="/about" className="text-xs text-[#8b857b] hover:text-[#111111] transition-colors">
             © {new Date().getFullYear()} Chris S. Yoon

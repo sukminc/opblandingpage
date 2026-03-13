@@ -25,6 +25,14 @@ const tiers = [
   },
 ];
 
+const hookTier = {
+  label: "Patron",
+  amount: "$3,000",
+  desc: "The deliberate hook. A serious package for someone who wants to materially change the pace of the next season.",
+  note: "Yes, this one is meant to make people stop and ask questions.",
+  url: "https://buy.stripe.com/6oUeVe1eueqA79E7Eg1wY06",
+};
+
 function openLink(url: string) {
   window.open(url, "_blank", "noopener,noreferrer");
 }
@@ -58,28 +66,56 @@ export default function FundingCTA() {
             </div>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-3">
-            {tiers.map((tier) => (
-              <button
-                key={tier.label}
-                onClick={() => openLink(tier.url)}
-                className="glass-panel rounded-[1.6rem] p-5 text-left transition-colors hover:border-[#b9b2a7] cursor-pointer"
-              >
-                <p className="text-[11px] font-mono uppercase tracking-[0.18em] text-[#8b857b]">
-                  {tier.label}
-                </p>
-                <p className="mt-4 text-3xl font-semibold tracking-[-0.05em] text-[#111111]">
-                  {tier.amount}
-                </p>
-                <p className="mt-4 text-sm leading-6 text-[#5f5a52]">
-                  {tier.desc}
-                </p>
-                <div className="mt-6 inline-flex items-center gap-2 text-sm text-[#111111]">
-                  Contribute
-                  <ArrowUpRight size={14} />
+          <div className="grid gap-3">
+            <div className="grid gap-3 sm:grid-cols-3">
+              {tiers.map((tier) => (
+                <button
+                  key={tier.label}
+                  onClick={() => openLink(tier.url)}
+                  className="glass-panel rounded-[1.6rem] p-5 text-left transition-colors hover:border-[#b9b2a7] cursor-pointer"
+                >
+                  <p className="text-[11px] font-mono uppercase tracking-[0.18em] text-[#8b857b]">
+                    {tier.label}
+                  </p>
+                  <p className="mt-4 text-3xl font-semibold tracking-[-0.05em] text-[#111111]">
+                    {tier.amount}
+                  </p>
+                  <p className="mt-4 text-sm leading-6 text-[#5f5a52]">
+                    {tier.desc}
+                  </p>
+                  <div className="mt-6 inline-flex items-center gap-2 text-sm text-[#111111]">
+                    Contribute
+                    <ArrowUpRight size={14} />
+                  </div>
+                </button>
+              ))}
+            </div>
+
+            <button
+              onClick={() => openLink(hookTier.url)}
+              className="rounded-[1.8rem] border border-[#111111]/18 bg-[#111111] px-6 py-6 text-left transition-colors hover:bg-[#222222] cursor-pointer"
+            >
+              <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
+                <div className="max-w-2xl">
+                  <p className="text-[11px] font-mono uppercase tracking-[0.18em] text-[#d5d0c6]">
+                    {hookTier.label}
+                  </p>
+                  <p className="mt-3 text-4xl sm:text-5xl font-semibold tracking-[-0.05em] text-[#fbfaf7]">
+                    {hookTier.amount}
+                  </p>
+                  <p className="mt-4 text-sm leading-7 text-[#d5d0c6]">
+                    {hookTier.desc}
+                  </p>
+                  <p className="mt-3 text-xs font-mono uppercase tracking-[0.14em] text-[#9f998f]">
+                    {hookTier.note}
+                  </p>
                 </div>
-              </button>
-            ))}
+                <div className="inline-flex items-center gap-2 text-sm text-[#fbfaf7]">
+                  Start a conversation
+                  <ArrowUpRight size={15} />
+                </div>
+              </div>
+            </button>
           </div>
         </div>
       </div>
