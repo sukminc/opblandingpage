@@ -6,6 +6,9 @@ const LOOKBACK_DAYS = 84;
 const COMMITS_PER_REPO = 100;
 const ALWAYS_INCLUDE_REPOS = ["one-percent-better-landing"];
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 function dayKey(date: Date) {
   return date.toISOString().slice(0, 10);
 }
@@ -38,7 +41,7 @@ export async function GET() {
                 ? { Authorization: `Bearer ${process.env.GITHUB_TOKEN}` }
                 : {}),
             },
-            next: { revalidate: 900 },
+            cache: "no-store",
           }
         );
 
@@ -84,7 +87,7 @@ export async function GET() {
         activeDays: days.filter((day) => day.count > 0).length,
       },
       {
-        headers: { "Cache-Control": "s-maxage=900, stale-while-revalidate=1800" },
+        headers: { "Cache-Control": "no-store, max-age=0" },
       }
     );
   } catch {

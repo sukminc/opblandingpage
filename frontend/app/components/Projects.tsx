@@ -281,7 +281,7 @@ function RichProjectCard({ project, commitState }: { project: Project; commitSta
               ))}
             </div>
           )}
-          {!commitState.loading && commitState.commits.slice(0, 3).map((c, i) => (
+          {!commitState.loading && commitState.commits.slice(0, 1).map((c, i) => (
             <a
               key={c.sha}
               href={c.url}

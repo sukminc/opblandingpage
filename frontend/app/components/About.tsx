@@ -41,10 +41,10 @@ type ActivityState = {
 };
 
 function intensityClass(count: number) {
-  if (count >= 5) return "bg-[#111111]";
-  if (count >= 3) return "bg-[#5f5a52]";
-  if (count >= 1) return "bg-[#b9b2a7]";
-  return "bg-[#ebe5db]";
+  if (count >= 5) return "bg-[#111111] border-[#111111]";
+  if (count >= 3) return "bg-[#7d6850] border-[#7d6850]";
+  if (count >= 1) return "bg-[#c7b08a] border-[#c7b08a]";
+  return "bg-[#f0e8dd] border-[#e0d5c7]";
 }
 
 export default function About() {
@@ -55,7 +55,7 @@ export default function About() {
 
     const loadActivity = async () => {
       try {
-        const res = await fetch("/api/activity");
+        const res = await fetch("/api/activity", { cache: "no-store" });
         if (!res.ok) {
           throw new Error(String(res.status));
         }
@@ -78,8 +78,11 @@ export default function About() {
     };
 
     loadActivity();
+    const interval = window.setInterval(loadActivity, 60_000);
+
     return () => {
       mounted = false;
+      window.clearInterval(interval);
     };
   }, []);
 
@@ -214,7 +217,7 @@ export default function About() {
               </a>
           </div>
 
-          <div className="mt-8 rounded-[1.4rem] border border-[#e5dfd5] bg-[#f8f6f2] p-5 sm:p-6">
+          <div className="mt-8 rounded-[1.4rem] border border-[#e5dfd5] bg-[linear-gradient(180deg,#f9f6f1_0%,#f4eee5_100%)] p-5 sm:p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.65)]">
             <div className="grid gap-6 sm:grid-cols-3">
               <div>
                 <p className="text-[11px] font-mono uppercase tracking-[0.18em] text-[#8b857b]">
@@ -256,7 +259,7 @@ export default function About() {
                         <div
                           key={day.date}
                           title={`${day.date}: ${day.count} commit${day.count === 1 ? "" : "s"}`}
-                          className={`h-3.5 w-3.5 rounded-[4px] ${intensityClass(day.count)}`}
+                          className={`h-3.5 w-3.5 rounded-[4px] border ${intensityClass(day.count)}`}
                         />
                       ))}
                     </div>
@@ -273,7 +276,7 @@ export default function About() {
               <span className="font-mono uppercase tracking-[0.16em]">Less</span>
               <div className="flex gap-1.5">
                 {[0, 1, 3, 5].map((count) => (
-                  <span key={count} className={`h-3.5 w-3.5 rounded-[4px] ${intensityClass(count)}`} />
+                  <span key={count} className={`h-3.5 w-3.5 rounded-[4px] border ${intensityClass(count)}`} />
                 ))}
               </div>
               <span className="font-mono uppercase tracking-[0.16em]">More</span>
