@@ -35,6 +35,7 @@ type ActivityDay = {
 type ActivityState = {
   activeDays: number;
   days: ActivityDay[];
+  reposAttempted?: number;
   reposTracked: number;
   totalCommits: number;
 };
@@ -68,6 +69,7 @@ export default function About() {
           setActivity({
             activeDays: 0,
             days: [],
+            reposAttempted: 0,
             reposTracked: 0,
             totalCommits: 0,
           });
@@ -195,11 +197,11 @@ export default function About() {
                 Build activity
               </p>
               <h3 className="mt-4 text-2xl font-semibold tracking-tight text-[#111111]">
-                Recent GitHub activity across the projects that power this site.
+                Recent GitHub activity across this site and the linked 1% Better repos.
               </h3>
               <p className="mt-4 text-sm leading-7 text-[#5f5a52]">
                 Not a generic link dump. A visual record of actual reps. This heatmap
-                aggregates recent commit activity from the linked 1% Better repositories.
+                aggregates recent commit activity from the landing page repo plus the linked 1% Better repositories.
               </p>
             </div>
 
@@ -231,6 +233,11 @@ export default function About() {
                 <p className="mt-2 text-2xl font-semibold text-[#111111]">
                   {activity?.reposTracked ?? "--"}
                 </p>
+                {activity?.reposAttempted !== undefined && activity.reposAttempted !== activity.reposTracked ? (
+                  <p className="mt-1 text-[11px] text-[#8b857b]">
+                    {activity.reposAttempted} attempted
+                  </p>
+                ) : null}
               </div>
               <div>
                 <p className="text-[11px] font-mono uppercase tracking-[0.18em] text-[#8b857b]">
