@@ -39,6 +39,21 @@ export const projects: Project[] = [
     mvpEta: "Target MVP: April 2026",
   },
   {
+    slug: "this-website",
+    repoName: "one-percent-better-landing",
+    title: "1% Better - This Website",
+    tagline: "The public front door for funding, hiring, and the whole shipping story.",
+    description:
+      "The live portfolio surface itself. Part frontend product, part operating layer, part proof that the build loop is real and active in public.",
+    status: "live",
+    repoType: "web-app",
+    category: "ops",
+    stage: "ops-layer",
+    tags: ["Next.js", "TypeScript", "Vercel"],
+    url: "https://github.com/sukminc/one-percent-better-landing",
+    seed: 69,
+  },
+  {
     slug: "onepercentbetter",
     repoName: "one-percent-better-poker",
     title: "1% Better - Exploit Better",

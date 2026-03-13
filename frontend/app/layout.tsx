@@ -2,29 +2,33 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://onepercentbetter.poker"),
-  title: "1% Better — Small apps. Fast loops.",
+  metadataBase: new URL("https://onepercentbetter.now"),
+  title: "1% Better",
   description:
-    "Chris S. Yoon's product studio: small apps, fast learning loops, and funding for the next season of building.",
+    "Quiet products, fast loops, and a public system for funding, hiring, and compounding better work.",
   icons: {
-    icon: "/logo.svg",
-    shortcut: "/logo.svg",
-    apple: "/logo.svg",
+    icon: [
+      { url: "/favicon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon-16.png", sizes: "16x16", type: "image/png" },
+      { url: "/logo-256.png", sizes: "256x256", type: "image/png" },
+    ],
+    shortcut: "/favicon-32.png",
+    apple: "/logo-256.png",
   },
   openGraph: {
-    title: "1% Better — Small apps. Fast loops.",
+    title: "1% Better",
     description:
-      "A minimal product studio built around one core value: get one percent better, then do it again.",
-    url: "https://onepercentbetter.poker",
+      "Quiet products, fast loops, and a public system for funding, hiring, and compounding better work.",
+    url: "https://onepercentbetter.now",
     siteName: "1% Better",
     locale: "en_US",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "1% Better — Small apps. Fast loops.",
+    title: "1% Better",
     description:
-      "A minimal product studio built around one core value: get one percent better, then do it again.",
+      "Quiet products, fast loops, and a public system for funding, hiring, and compounding better work.",
   },
 };
 

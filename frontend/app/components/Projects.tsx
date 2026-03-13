@@ -21,7 +21,49 @@ const CATEGORY_META: Record<ProjectCategory, { title: string; description: strin
   },
 };
 
-function ProjectCard({ project }: { project: typeof projects[number] }) {
+function FeaturedProjectCard({ project, index }: { project: typeof projects[number]; index: number }) {
+  const variants = [
+    {
+      shell:
+        "border-[#111111]/15 bg-[radial-gradient(circle_at_top_left,_rgba(17,17,17,0.08),_transparent_48%),linear-gradient(135deg,#fbf7f1_0%,#f1e9df_100%)]",
+      badge: "border-[#111111]/20 bg-[#111111] text-[#f8f3ea]",
+      accent: "bg-[#111111]",
+      note: "Core brand product",
+    },
+    {
+      shell:
+        "border-[#8d8574]/20 bg-[radial-gradient(circle_at_top_left,_rgba(166,145,109,0.18),_transparent_45%),linear-gradient(135deg,#fbf7f1_0%,#efe8dc_100%)]",
+      badge: "border-[#a6916d]/25 bg-[#f6ecda] text-[#7a6745]",
+      accent: "bg-[#a6916d]",
+      note: "Shipping quietly",
+    },
+  ][index % 2];
+
+  return (
+    <div>
+      <div className={`glass-panel rounded-[1.75rem] border px-6 py-6 shadow-[0_18px_60px_rgba(17,17,17,0.06)] ${variants.shell}`}>
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            <div className="flex items-center gap-2">
+              <span className={`h-2 w-2 rounded-full ${variants.accent}`} />
+              <p className="text-[10px] uppercase tracking-[0.22em] text-[#8b857b]">Featured product</p>
+            </div>
+            <h3 className="mt-3 text-lg font-semibold text-[#111111]">{project.title}</h3>
+            <p className="mt-2 max-w-xl text-sm leading-6 text-[#4f4a43]">{project.tagline}</p>
+            <p className="mt-3 text-[11px] uppercase tracking-[0.16em] text-[#8b857b]">{variants.note}</p>
+          </div>
+          <span className={`rounded-full border px-3 py-1 text-[10px] font-medium uppercase tracking-[0.18em] ${variants.badge}`}>
+            Coming soon
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function CompactProjectCard({ project }: { project: typeof projects[number] }) {
+  const badge = project.status === "live" ? "Live now" : "Coming soon";
+
   return (
     <div>
       <div className="glass-panel rounded-[1.5rem] border border-[#ddd8cf] px-5 py-5">
@@ -31,7 +73,7 @@ function ProjectCard({ project }: { project: typeof projects[number] }) {
             <p className="mt-2 text-sm leading-6 text-[#5f5a52]">{project.tagline}</p>
           </div>
           <span className="rounded-full border border-[#d7d0c3] bg-[#f4efe6] px-3 py-1 text-[10px] font-medium uppercase tracking-[0.18em] text-[#8b857b]">
-            Coming soon
+            {badge}
           </span>
         </div>
       </div>
@@ -72,9 +114,13 @@ export default function Projects() {
                 <p className="mt-2 max-w-3xl text-sm leading-7 text-[#5f5a52]">{section.meta.description}</p>
               </div>
               <div className="grid grid-cols-1 gap-3">
-                {section.items.map((project) => (
-                  <ProjectCard key={project.slug} project={project} />
-                ))}
+                {section.items.map((project, index) =>
+                  section.category === "featured" ? (
+                    <FeaturedProjectCard key={project.slug} project={project} index={index} />
+                  ) : (
+                    <CompactProjectCard key={project.slug} project={project} />
+                  )
+                )}
               </div>
             </div>
           ))}

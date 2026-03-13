@@ -9,11 +9,13 @@ test.describe("Projects", () => {
     await expect(page.locator("#projects")).toContainText("1% Better - Exploit Better");
     await expect(page.locator("#projects")).toContainText("1% Better - Action Keeper");
     await expect(page.locator("#projects")).toContainText("1% Better - OS");
+    await expect(page.locator("#projects")).toContainText("1% Better - This Website");
     await expect(page.locator("#projects")).toContainText("Featured Products");
     await expect(page.locator("#projects")).toContainText("Poker Product Line");
+    await expect(page.locator("#projects")).toContainText("Operating Layer");
     await expect(page.locator("#projects")).toContainText("Archive / Proof of Work");
     await expect(page.locator("#projects")).toContainText("Coming soon");
-    await expect(page.locator("#projects")).toContainText("Just the hooks for now");
+    await expect(page.locator("#projects")).toContainText("Core brand product");
   });
 
   test("about page shows build activity heatmap", async ({ page }) => {
