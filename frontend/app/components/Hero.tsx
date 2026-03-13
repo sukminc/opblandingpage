@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import { ArrowDown, ArrowUpRight } from "lucide-react";
 import type { CSSProperties } from "react";
 import { useState } from "react";
 
@@ -103,22 +102,6 @@ export default function Hero() {
             page to ship ideas quickly while buying runway for what comes next.
           </p>
 
-          <div className="mt-10 flex flex-wrap items-center gap-3">
-            <a
-              href="#projects"
-              className="inline-flex items-center gap-2 rounded-2xl bg-[#111111] px-5 py-3 text-sm font-semibold text-[#f5f3ef] transition-colors hover:bg-[#2d2d2d]"
-            >
-              See what&apos;s shipping
-              <ArrowDown size={15} />
-            </a>
-            <a
-              href="#fund"
-              className="inline-flex items-center gap-2 rounded-2xl border border-[#d0c8bc] bg-[#fbfaf7] px-5 py-3 text-sm text-[#111111] transition-colors hover:border-[#b9b2a7] hover:bg-[#f1efea]"
-            >
-              Why this page exists
-              <ArrowUpRight size={15} />
-            </a>
-          </div>
         </div>
 
           <div className="mt-16 grid gap-4 lg:grid-cols-[1.15fr_0.85fr]">

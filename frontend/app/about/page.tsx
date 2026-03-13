@@ -1,5 +1,6 @@
 import Link from "next/link";
 import About from "../components/About";
+import Footer from "../components/Footer";
 
 export default function AboutPage() {
   return (
@@ -13,6 +14,7 @@ export default function AboutPage() {
         </Link>
       </div>
       <About />
+      <Footer />
     </main>
   );
 }

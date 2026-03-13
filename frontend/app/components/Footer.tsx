@@ -15,7 +15,7 @@ export default function Footer() {
             height={32}
           />
           <Link href="/about" className="text-xs text-[#8b857b] hover:text-[#111111] transition-colors">
-            © {new Date().getFullYear()} Chris S. Yoon
+            © 2026 1% Better
           </Link>
         </div>
         <div className="flex items-center gap-5">
