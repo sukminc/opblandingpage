@@ -1,6 +1,7 @@
 "use client";
 
 import { ArrowUpRight } from "lucide-react";
+import { useEffect, useState } from "react";
 
 const experience = [
   {
@@ -26,7 +27,66 @@ const experience = [
   },
 ];
 
+type ActivityDay = {
+  date: string;
+  count: number;
+};
+
+type ActivityState = {
+  activeDays: number;
+  days: ActivityDay[];
+  reposTracked: number;
+  totalCommits: number;
+};
+
+function intensityClass(count: number) {
+  if (count >= 5) return "bg-[#111111]";
+  if (count >= 3) return "bg-[#5f5a52]";
+  if (count >= 1) return "bg-[#b9b2a7]";
+  return "bg-[#ebe5db]";
+}
+
 export default function About() {
+  const [activity, setActivity] = useState<ActivityState | null>(null);
+
+  useEffect(() => {
+    let mounted = true;
+
+    const loadActivity = async () => {
+      try {
+        const res = await fetch("/api/activity");
+        if (!res.ok) {
+          throw new Error(String(res.status));
+        }
+
+        const data = (await res.json()) as ActivityState;
+        if (mounted) {
+          setActivity(data);
+        }
+      } catch {
+        if (mounted) {
+          setActivity({
+            activeDays: 0,
+            days: [],
+            reposTracked: 0,
+            totalCommits: 0,
+          });
+        }
+      }
+    };
+
+    loadActivity();
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  const heatmapWeeks = activity?.days.length
+    ? Array.from({ length: Math.ceil(activity.days.length / 7) }, (_, weekIndex) =>
+        activity.days.slice(weekIndex * 7, weekIndex * 7 + 7)
+      )
+    : [];
+
   return (
     <section id="about" className="px-6 pb-24">
       <div className="mx-auto max-w-4xl">
@@ -128,23 +188,92 @@ export default function About() {
           </div>
         </div>
 
-        <div className="mt-10 flex flex-col sm:flex-row items-start sm:items-center gap-3">
-          <a
-            href="https://linkedin.com/in/sukminyoon"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-xl bg-[#111111] px-5 py-3 text-sm font-medium text-[#f5f3ef] transition-colors hover:bg-[#2d2d2d]"
-          >
-            Connect on LinkedIn <ArrowUpRight size={14} />
-          </a>
-          <a
-            href="https://github.com/sukminc"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-xl border border-[#ddd8cf] px-5 py-3 text-sm text-[#5f5a52] transition-colors hover:border-[#b9b2a7] hover:text-[#111111]"
-          >
-            View GitHub <ArrowUpRight size={14} />
-          </a>
+        <div className="mt-10 glass-panel rounded-[2rem] p-8 sm:p-10">
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+            <div className="max-w-xl">
+              <p className="text-xs font-mono uppercase tracking-[0.22em] text-[#8b857b]">
+                Build activity
+              </p>
+              <h3 className="mt-4 text-2xl font-semibold tracking-tight text-[#111111]">
+                Recent GitHub activity across the projects that power this site.
+              </h3>
+              <p className="mt-4 text-sm leading-7 text-[#5f5a52]">
+                Not a generic link dump. A visual record of actual reps. This heatmap
+                aggregates recent commit activity from the linked 1% Better repositories.
+              </p>
+            </div>
+
+            <a
+              href="https://github.com/sukminc"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-xl border border-[#ddd8cf] px-5 py-3 text-sm text-[#5f5a52] transition-colors hover:border-[#b9b2a7] hover:text-[#111111]"
+            >
+              Open GitHub
+              <ArrowUpRight size={14} />
+            </a>
+          </div>
+
+          <div className="mt-8 rounded-[1.4rem] border border-[#e5dfd5] bg-[#f8f6f2] p-5 sm:p-6">
+            <div className="flex flex-wrap items-center gap-6">
+              <div>
+                <p className="text-[11px] font-mono uppercase tracking-[0.18em] text-[#8b857b]">
+                  Active days
+                </p>
+                <p className="mt-2 text-2xl font-semibold text-[#111111]">
+                  {activity?.activeDays ?? "--"}
+                </p>
+              </div>
+              <div>
+                <p className="text-[11px] font-mono uppercase tracking-[0.18em] text-[#8b857b]">
+                  Tracked repos
+                </p>
+                <p className="mt-2 text-2xl font-semibold text-[#111111]">
+                  {activity?.reposTracked ?? "--"}
+                </p>
+              </div>
+              <div>
+                <p className="text-[11px] font-mono uppercase tracking-[0.18em] text-[#8b857b]">
+                  Recent commits
+                </p>
+                <p className="mt-2 text-2xl font-semibold text-[#111111]">
+                  {activity?.totalCommits ?? "--"}
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-6 overflow-x-auto">
+              <div className="flex min-w-max gap-1.5">
+                {heatmapWeeks.length > 0 ? (
+                  heatmapWeeks.map((week, weekIndex) => (
+                    <div key={weekIndex} className="grid grid-rows-7 gap-1.5">
+                      {week.map((day) => (
+                        <div
+                          key={day.date}
+                          title={`${day.date}: ${day.count} commit${day.count === 1 ? "" : "s"}`}
+                          className={`h-3.5 w-3.5 rounded-[4px] ${intensityClass(day.count)}`}
+                        />
+                      ))}
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-sm text-[#8b857b]">
+                    Loading recent activity...
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="mt-5 flex items-center gap-3 text-xs text-[#8b857b]">
+              <span className="font-mono uppercase tracking-[0.16em]">Less</span>
+              <div className="flex gap-1.5">
+                {[0, 1, 3, 5].map((count) => (
+                  <span key={count} className={`h-3.5 w-3.5 rounded-[4px] ${intensityClass(count)}`} />
+                ))}
+              </div>
+              <span className="font-mono uppercase tracking-[0.16em]">More</span>
+            </div>
+          </div>
         </div>
       </div>
     </section>
