@@ -2,12 +2,6 @@
 
 import { Clock, ExternalLink, GitBranch } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import {
-  SiNextdotjs, SiFastapi, SiPython, SiPandas, SiNumpy, SiVercel,
-  SiPostgresql, SiDocker, SiApacheairflow, SiGithubactions, SiTypescript,
-  SiFlutter, SiDart, SiSupabase, SiStripe, SiPytest, SiApple, SiAndroid,
-  SiSqlalchemy,
-} from "react-icons/si";
 import { projects, type Project, type ProjectStatus } from "../data/projects";
 
 const GH_OWNER = "sukminc";
@@ -31,57 +25,48 @@ interface CommitState {
 
 const statusConfig: Record<ProjectStatus, { label: string; color: string; dot: string }> = {
   live:     { label: "Live",     color: "text-emerald-400", dot: "bg-emerald-400" },
-  building: { label: "Building", color: "text-[#5E5CE6]",   dot: "bg-[#5E5CE6] animate-pulse" },
-  idea:     { label: "Idea",     color: "text-[#4B4C58]",   dot: "bg-[#4B4C58]" },
+  building: { label: "Building", color: "text-[#b8ff72]",   dot: "bg-[#b8ff72] animate-pulse" },
+  idea:     { label: "Idea",     color: "text-[#61746a]",   dot: "bg-[#61746a]" },
 };
 
 const STATUS_BAR: Record<string, string> = {
   live:     "bg-emerald-400",
-  building: "bg-[#5E5CE6]",
-  idea:     "bg-[#4B4C58]",
+  building: "bg-[#b8ff72]",
+  idea:     "bg-[#61746a]",
 };
 
-type IconComponent = React.ComponentType<{ size?: number; color?: string; className?: string }>;
-
-const TECH_ICONS: Record<string, { Icon: IconComponent; color: string }> = {
-  "Next.js":              { Icon: SiNextdotjs,      color: "#ffffff" },
-  "FastAPI":              { Icon: SiFastapi,         color: "#009688" },
-  "Python":               { Icon: SiPython,          color: "#3776AB" },
-  "Python (FastAPI)":     { Icon: SiFastapi,         color: "#009688" },
-  "TypeScript":           { Icon: SiTypescript,      color: "#3178C6" },
-  "TypeScript (Next.js)": { Icon: SiNextdotjs,       color: "#ffffff" },
-  "SQLAlchemy":           { Icon: SiSqlalchemy,      color: "#D71F00" },
-  "Pandas":               { Icon: SiPandas,          color: "#9575CD" },
-  "NumPy":                { Icon: SiNumpy,           color: "#4DABF7" },
-  "Vercel":               { Icon: SiVercel,          color: "#ffffff" },
-  "PostgreSQL":           { Icon: SiPostgresql,      color: "#4169E1" },
-  "Docker":               { Icon: SiDocker,          color: "#2496ED" },
-  "Apache Airflow":       { Icon: SiApacheairflow,   color: "#017CEE" },
-  "GitHub Actions":       { Icon: SiGithubactions,   color: "#2088FF" },
-  "Flutter":              { Icon: SiFlutter,         color: "#54C5F8" },
-  "Dart":                 { Icon: SiDart,            color: "#0175C2" },
-  "Supabase":             { Icon: SiSupabase,        color: "#3ECF8E" },
-  "Stripe":               { Icon: SiStripe,          color: "#635BFF" },
-  "Pytest":               { Icon: SiPytest,          color: "#0A9EDC" },
-  "iOS":                  { Icon: SiApple,           color: "#ffffff" },
-  "Android":              { Icon: SiAndroid,         color: "#34A853" },
+const TECH_COLORS: Record<string, string> = {
+  "Next.js": "#eff6ef",
+  "FastAPI": "#57d1b2",
+  "Python": "#8eb9ff",
+  "Python (FastAPI)": "#57d1b2",
+  "TypeScript": "#66a8ff",
+  "TypeScript (Next.js)": "#eff6ef",
+  "SQLAlchemy": "#ff8a70",
+  "Pandas": "#b89cff",
+  "NumPy": "#82d4ff",
+  "Vercel": "#eff6ef",
+  "PostgreSQL": "#7ea8ff",
+  "Docker": "#79ccff",
+  "Apache Airflow": "#5fb7ff",
+  "GitHub Actions": "#6ab0ff",
+  "Flutter": "#78d3ff",
+  "Dart": "#56c3ff",
+  "Supabase": "#6fe2a5",
+  "Stripe": "#b8a1ff",
+  "Pytest": "#6fdcff",
+  "iOS": "#eff6ef",
+  "Android": "#7de38d",
 };
 
 function TechBadge({ tag }: { tag: string }) {
-  const entry = TECH_ICONS[tag];
-  if (entry) {
-    const { Icon, color } = entry;
-    return (
-      <div title={tag} className="w-6 h-6 rounded-md bg-[#1C1C1F] border border-[#232329] flex items-center justify-center">
-        <Icon size={13} color={color} />
-      </div>
-    );
-  }
-  // Named tech without an icon — dot + label, same height as icon badges
   return (
-    <div title={tag} className="h-6 flex items-center gap-1.5 bg-[#1C1C1F] border border-[#232329] rounded-md px-2">
-      <span className="w-1 h-1 rounded-full bg-[#4B4C58] flex-shrink-0" />
-      <span className="text-[10px] text-[#4B4C58] leading-none">{tag}</span>
+    <div title={tag} className="h-7 flex items-center gap-2 bg-[#12201a] border border-[#24372f] rounded-full px-3">
+      <span
+        className="w-1.5 h-1.5 rounded-full flex-shrink-0"
+        style={{ backgroundColor: TECH_COLORS[tag] ?? "#61746a" }}
+      />
+      <span className="text-[10px] text-[#a6b8ae] leading-none">{tag}</span>
     </div>
   );
 }
@@ -106,10 +91,10 @@ function ProjectCard({ project, commitState }: { project: Project; commitState: 
     <div className={project.featured ? "md:col-span-2" : ""}>
       <div
         onClick={() => document.getElementById("fund")?.scrollIntoView({ behavior: "smooth" })}
-        className={`flex flex-col rounded-2xl p-6 bg-[#161618] border transition-colors h-full cursor-pointer ${
+        className={`glass-panel flex flex-col rounded-[1.75rem] p-6 transition-colors h-full cursor-pointer ${
           project.featured
-            ? "border-[#5E5CE6]/25 hover:border-[#5E5CE6]/40"
-            : "border-[#232329] hover:border-[#36363F]"
+            ? "border-[#b8ff72]/35 hover:border-[#d3ff9a]/45"
+            : "border-[#24372f] hover:border-[#4d7263]"
         }`}
       >
         {/* Header */}
@@ -117,10 +102,10 @@ function ProjectCard({ project, commitState }: { project: Project; commitState: 
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-0.5">
               <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${cfg.dot}`} />
-              <h3 className="text-sm font-semibold text-[#F7F8F8] truncate">{project.title}</h3>
+              <h3 className="text-sm font-semibold text-[#eff6ef] truncate">{project.title}</h3>
             </div>
             {repoName && (
-              <div className="flex items-center gap-1.5 text-[10px] text-[#4B4C58] pl-3.5">
+              <div className="flex items-center gap-1.5 text-[10px] text-[#61746a] pl-3.5">
                 <GitBranch size={9} />
                 <span className="font-mono">{GH_OWNER}/{repoName}</span>
               </div>
@@ -128,23 +113,23 @@ function ProjectCard({ project, commitState }: { project: Project; commitState: 
           </div>
           {commitState.totalCount !== null && (
             <div className="text-right flex-shrink-0">
-              <span className="text-base font-bold text-[#F7F8F8] leading-none">{commitState.totalCount}</span>
-              <p className="text-[9px] text-[#4B4C58]">commits</p>
+              <span className="text-base font-bold text-[#eff6ef] leading-none">{commitState.totalCount}</span>
+              <p className="text-[9px] text-[#61746a]">commits</p>
             </div>
           )}
         </div>
 
         {/* Progress bar */}
         <div className="mb-4">
-          <div className="flex justify-between text-[10px] text-[#4B4C58] mb-1.5">
+          <div className="flex justify-between text-[10px] text-[#61746a] mb-1.5">
             <span className="truncate pr-2">{project.tagline}</span>
             <span className="flex-shrink-0">
               {project.mvpProgress === 100 ? "Live ✓" : `${project.mvpProgress}%`}
             </span>
           </div>
-          <div className="h-1 bg-[#232329] rounded-full overflow-hidden">
+          <div className="h-1 bg-[#1a2923] rounded-full overflow-hidden">
             <div
-              className={`h-full rounded-full transition-all duration-700 ${STATUS_BAR[project.status] ?? "bg-[#4B4C58]"}`}
+              className={`h-full rounded-full transition-all duration-700 ${STATUS_BAR[project.status] ?? "bg-[#61746a]"}`}
               style={{ width: `${project.mvpProgress}%` }}
             />
           </div>
@@ -156,10 +141,10 @@ function ProjectCard({ project, commitState }: { project: Project; commitState: 
             <div className="space-y-2 py-1">
               {[0, 1, 2].map((i) => (
                 <div key={i} className="flex gap-2.5 animate-pulse">
-                  <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#232329] flex-shrink-0" />
+                  <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#24372f] flex-shrink-0" />
                   <div className="flex-1 space-y-1.5">
-                    <div className="h-2.5 bg-[#1C1C1F] rounded w-3/4" />
-                    <div className="h-2 bg-[#1C1C1F] rounded w-1/3" />
+                    <div className="h-2.5 bg-[#12201a] rounded w-3/4" />
+                    <div className="h-2 bg-[#12201a] rounded w-1/3" />
                   </div>
                 </div>
               ))}
@@ -175,21 +160,21 @@ function ProjectCard({ project, commitState }: { project: Project; commitState: 
                 onClick={(e) => e.stopPropagation()}
                 className="group flex items-start gap-2.5 py-1.5 hover:bg-white/[0.02] rounded-lg px-1.5 -mx-1.5 transition-colors"
               >
-                <div className={`mt-1 w-1.5 h-1.5 rounded-full flex-shrink-0 ${i === 0 ? "bg-[#5E5CE6]" : "bg-[#36363F]"}`} />
+                <div className={`mt-1 w-1.5 h-1.5 rounded-full flex-shrink-0 ${i === 0 ? "bg-[#b8ff72]" : "bg-[#4d7263]"}`} />
                 <div className="flex-1 min-w-0">
-                  <p className={`text-xs truncate leading-snug ${i === 0 ? "text-[#F7F8F8]" : "text-[#8A8B97]"} group-hover:text-[#F7F8F8] transition-colors`}>
+                  <p className={`text-xs truncate leading-snug ${i === 0 ? "text-[#eff6ef]" : "text-[#a6b8ae]"} group-hover:text-[#eff6ef] transition-colors`}>
                     {c.message.split("\n")[0]}
                   </p>
                   <div className="flex items-center gap-1.5 mt-0.5">
-                    <code className="text-[9px] text-[#4B4C58] font-mono">{c.sha.slice(0, 7)}</code>
-                    <span className="text-[9px] text-[#36363F]">·</span>
-                    <span className="flex items-center gap-1 text-[9px] text-[#4B4C58]">
+                    <code className="text-[9px] text-[#61746a] font-mono">{c.sha.slice(0, 7)}</code>
+                    <span className="text-[9px] text-[#4d7263]">·</span>
+                    <span className="flex items-center gap-1 text-[9px] text-[#61746a]">
                       <Clock size={8} />
                       {timeAgo(c.date)}
                     </span>
                   </div>
                 </div>
-                <ExternalLink size={10} className="mt-1 flex-shrink-0 text-[#4B4C58] opacity-0 group-hover:opacity-100 transition-opacity" />
+                <ExternalLink size={10} className="mt-1 flex-shrink-0 text-[#61746a] opacity-0 group-hover:opacity-100 transition-opacity" />
               </a>
             ))}
         </div>
@@ -262,16 +247,16 @@ export default function Projects() {
     : projects;
 
   return (
-    <section id="projects" className="py-24 px-6 border-t border-[#232329]">
-      <div className="max-w-5xl mx-auto">
+    <section id="projects" className="section-shell py-24 px-6">
+      <div className="relative max-w-6xl mx-auto">
         <div className="mb-10">
           <div className="flex items-center gap-2 mb-3">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            <p className="text-xs text-[#8A8B97]">Projects · Live from GitHub</p>
+            <p className="text-xs text-[#a6b8ae]">Projects · Live from GitHub</p>
           </div>
-          <h2 className="text-3xl md:text-4xl font-bold text-[#F7F8F8] tracking-tight">
-            Sorted by{" "}
-            <span className="text-[#4B4C58]">latest activity.</span>
+          <h2 className="text-3xl md:text-5xl font-bold text-[#eff6ef] tracking-tight">
+            Built to reward{" "}
+            <span className="text-[#61746a]">consistent motion.</span>
           </h2>
         </div>
 

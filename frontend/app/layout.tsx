@@ -1,39 +1,25 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import { Roboto_Mono } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const robotoMono = Roboto_Mono({
-  variable: "--font-roboto-mono",
-  subsets: ["latin"],
-  display: "swap",
-});
-
 export const metadata: Metadata = {
-  metadataBase: new URL("https://onepercentbetter.poker"),
-  title: "onepercentbetter.poker — GTO Defends. We Exploit.",
+  metadataBase: new URL("https://onepercentbetter.xyz"),
+  title: "onepercentbetter — Systems for compound growth",
   description:
-    "I built a full-stack poker analytics platform using AI. It parses GGPoker hand histories, quantifies opponent GTO deviations, and surfaces actionable bb/100 exploit edges. Built by Sukmin Yoon.",
+    "A landing page for Chris S. Yoon's products, experiments, and systems built around one core belief: small improvements compound.",
   openGraph: {
-    title: "onepercentbetter.poker — GTO Defends. We Exploit.",
+    title: "onepercentbetter — Systems for compound growth",
     description:
-      "Full-stack poker exploit engine built with AI. Parses GGPoker hand histories to quantify GTO deviations and surface bb/100 edges. Built by Sukmin Yoon.",
-    url: "https://onepercentbetter.poker",
-    siteName: "onepercentbetter.poker",
+      "Products, experiments, and operating systems built around one core belief: get one percent better, repeatedly.",
+    url: "https://onepercentbetter.xyz",
+    siteName: "onepercentbetter",
     locale: "en_US",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "onepercentbetter.poker — GTO Defends. We Exploit.",
+    title: "onepercentbetter — Systems for compound growth",
     description:
-      "Full-stack poker exploit engine built with AI. Parses GGPoker hand histories to quantify GTO deviations and surface bb/100 edges.",
+      "Products, experiments, and operating systems built around one core belief: get one percent better, repeatedly.",
   },
 };
 
@@ -44,7 +30,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body className={`${inter.variable} ${robotoMono.variable} antialiased`}>
+      <body className="antialiased">
         {children}
       </body>
     </html>

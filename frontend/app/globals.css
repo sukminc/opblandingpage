@@ -1,47 +1,81 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-background: #0F0F11;
-  --color-foreground: #F7F8F8;
-  --color-accent: #5E5CE6;
-  --color-accent-hover: #7B79F7;
-  --color-surface: #161618;
-  --color-surface-hover: #1C1C1F;
-  --color-border: #232329;
-  --color-border-hover: #36363F;
-  --color-secondary: #8A8B97;
-  --color-muted: #4B4C58;
-  --font-sans: var(--font-inter);
-  --font-mono: var(--font-roboto-mono);
+  --color-background: #08110d;
+  --color-foreground: #eff6ef;
+  --color-accent: #b8ff72;
+  --color-accent-hover: #d3ff9a;
+  --color-surface: #0e1814;
+  --color-surface-hover: #13201a;
+  --color-border: #21312b;
+  --color-border-hover: #355046;
+  --color-secondary: #a6b8ae;
+  --color-muted: #61746a;
+  --font-sans: "Avenir Next", "Segoe UI", "Helvetica Neue", sans-serif;
+  --font-mono: "SFMono-Regular", "Menlo", "Monaco", monospace;
 }
 
 * {
   box-sizing: border-box;
 }
 
+html {
+  background:
+    radial-gradient(circle at top left, rgba(184, 255, 114, 0.12), transparent 28%),
+    radial-gradient(circle at top right, rgba(84, 160, 125, 0.16), transparent 30%),
+    #08110d;
+}
+
 body {
-  background: #0F0F11;
-  color: #F7F8F8;
-  font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
+  background:
+    radial-gradient(circle at 15% 20%, rgba(184, 255, 114, 0.08), transparent 24%),
+    linear-gradient(180deg, #09120e 0%, #08110d 38%, #0a120f 100%);
+  color: #eff6ef;
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+a {
+  text-decoration: none;
+}
+
 ::selection {
-  background: #5E5CE6;
-  color: #ffffff;
+  background: #b8ff72;
+  color: #08110d;
 }
 
 ::-webkit-scrollbar {
-  width: 4px;
+  width: 7px;
 }
 ::-webkit-scrollbar-track {
-  background: #0F0F11;
+  background: #08110d;
 }
 ::-webkit-scrollbar-thumb {
-  background: #232329;
-  border-radius: 2px;
+  background: #24372f;
+  border-radius: 999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #5E5CE6;
+  background: #b8ff72;
+}
+
+.section-shell {
+  position: relative;
+  border-top: 1px solid rgba(97, 116, 106, 0.22);
+}
+
+.section-shell::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.015), transparent 35%),
+    linear-gradient(90deg, rgba(184, 255, 114, 0.035), transparent 18%, transparent 82%, rgba(184, 255, 114, 0.035));
+  pointer-events: none;
+}
+
+.glass-panel {
+  background: linear-gradient(180deg, rgba(14, 24, 20, 0.94), rgba(10, 18, 15, 0.92));
+  border: 1px solid rgba(53, 80, 70, 0.55);
+  box-shadow: 0 16px 80px rgba(0, 0, 0, 0.28);
 }
