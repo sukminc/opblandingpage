@@ -257,17 +257,18 @@ export default function About() {
               </div>
             </div>
 
-            <div className="mt-8 grid gap-8 xl:grid-cols-[minmax(0,1fr)_320px]">
-              <div className="overflow-x-auto">
-                <div className="inline-flex min-w-max gap-1.5">
+            <div className="mt-8 grid gap-6 md:grid-cols-[minmax(0,1.1fr)_minmax(280px,0.9fr)] md:items-start">
+              <div className="min-w-0">
+                <div className="overflow-x-auto">
+                  <div className="inline-flex min-w-max gap-1">
                   {heatmapWeeks.length > 0 ? (
                     heatmapWeeks.map((week, weekIndex) => (
-                      <div key={weekIndex} className="grid grid-rows-7 gap-1.5">
+                      <div key={weekIndex} className="grid grid-rows-7 gap-1">
                         {week.map((day) => (
                           <div
                             key={day.date}
                             title={`${day.date}: ${day.count} commit${day.count === 1 ? "" : "s"}`}
-                            className={`h-3.5 w-3.5 rounded-[4px] border ${intensityClass(day.count)}`}
+                            className={`h-3 w-3 rounded-[4px] border ${intensityClass(day.count)}`}
                           />
                         ))}
                       </div>
@@ -277,6 +278,17 @@ export default function About() {
                       Loading recent activity...
                     </div>
                   )}
+                  </div>
+                </div>
+
+                <div className="mt-5 inline-flex items-center gap-3 text-xs text-[#8b857b]">
+                  <span className="font-mono uppercase tracking-[0.16em]">Less</span>
+                  <div className="flex gap-1.5">
+                    {[0, 1, 3, 5].map((count) => (
+                      <span key={count} className={`h-3 w-3 rounded-[4px] border ${intensityClass(count)}`} />
+                    ))}
+                  </div>
+                  <span className="font-mono uppercase tracking-[0.16em]">More</span>
                 </div>
               </div>
 
@@ -317,16 +329,6 @@ export default function About() {
                   </div>
                 </div>
               </div>
-            </div>
-
-            <div className="mt-5 inline-flex items-center gap-3 text-xs text-[#8b857b]">
-              <span className="font-mono uppercase tracking-[0.16em]">Less</span>
-              <div className="flex gap-1.5">
-                {[0, 1, 3, 5].map((count) => (
-                  <span key={count} className={`h-3.5 w-3.5 rounded-[4px] border ${intensityClass(count)}`} />
-                ))}
-              </div>
-              <span className="font-mono uppercase tracking-[0.16em]">More</span>
             </div>
           </div>
         </div>

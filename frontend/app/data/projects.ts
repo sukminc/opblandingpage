@@ -16,6 +16,8 @@ export interface Project {
   url?: string;
   featured?: boolean;
   mvpEta?: string;
+  visibility?: "public" | "internal";
+  readinessSignals?: string[];
   repoName?: string;   // GitHub repo name under sukminc/ (omit if no repo)
 }
 
@@ -34,6 +36,7 @@ export const projects: Project[] = [
     tags: ["FastAPI", "Supabase", "Stripe", "iOS", "Android"],
     url: "https://github.com/sukminc/one-percent-better-today",
     featured: true,
+    visibility: "public",
     mvpEta: "Target MVP: April 2026",
   },
   {
@@ -49,6 +52,7 @@ export const projects: Project[] = [
     stage: "ops-layer",
     tags: ["Next.js", "TypeScript", "Vercel"],
     url: "https://github.com/sukminc/one-percent-better-landing",
+    visibility: "public",
   },
   {
     slug: "onepercentbetter",
@@ -63,6 +67,7 @@ export const projects: Project[] = [
     stage: "concept",
     tags: ["Next.js", "FastAPI", "SQLAlchemy", "Pandas", "NumPy", "Vercel"],
     url: "https://github.com/sukminc/one-percent-better-poker",
+    visibility: "public",
     mvpEta: "Target MVP: June 2026",
   },
   {
@@ -77,6 +82,8 @@ export const projects: Project[] = [
     stage: "concept",
     tags: ["Next.js", "Vercel"],
     url: "https://onepercentbetter.poker",
+    visibility: "public",
+    readinessSignals: ["Brand shell ready", "Landing direction set", "Positioning locked"],
     mvpEta: "Coming soon",
   },
   {
@@ -92,6 +99,8 @@ export const projects: Project[] = [
     stage: "ops-layer",
     tags: ["Python", "GitHub Actions", "JSON", "CLI"],
     url: "https://github.com/sukminc/one-percent-better-os",
+    visibility: "internal",
+    readinessSignals: ["Workflow engine active", "Landing sync in use", "Weekly ops layer running"],
     mvpEta: "Target MVP: March 2026",
   },
   {
@@ -107,6 +116,7 @@ export const projects: Project[] = [
     stage: "archive",
     tags: ["Python", "Apache Airflow", "PostgreSQL", "Docker", "GitHub Actions"],
     url: "https://github.com/sukminc/bluejays-financial-mlops",
+    visibility: "public",
   },
   {
     slug: "actionkeeper",
@@ -121,6 +131,7 @@ export const projects: Project[] = [
     stage: "workflow-build",
     tags: ["Python (FastAPI)", "TypeScript (Next.js)", "PostgreSQL", "Docker", "Stripe"],
     url: "https://github.com/sukminc/one-percent-better-poker-staking",
+    visibility: "public",
     mvpEta: "Target MVP: July 2026",
   },
   {
@@ -136,6 +147,7 @@ export const projects: Project[] = [
     stage: "mvp-loop",
     tags: ["Flutter", "Dart", "Supabase", "iOS", "Android"],
     url: "https://github.com/sukminc/one-percent-better-focus",
+    visibility: "public",
     mvpEta: "Target MVP: March 2026",
   },
   {
@@ -151,5 +163,6 @@ export const projects: Project[] = [
     stage: "archive",
     tags: ["Python", "TwelveLabs", "Pytest"],
     url: "https://github.com/sukminc/TwelveLabs",
+    visibility: "public",
   },
 ];

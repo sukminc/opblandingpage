@@ -31,6 +31,14 @@ interface CommitState {
   loading: boolean;
 }
 
+function isInternalProject(project: Project) {
+  return project.visibility === "internal";
+}
+
+function shouldShowRepoDetails(project: Project) {
+  return Boolean(project.repoName) && !isInternalProject(project);
+}
+
 const STAGE_BASELINE_PROGRESS: Record<ProjectStage, number> = {
   prototype: 36,
   "mvp-loop": 52,
@@ -142,7 +150,7 @@ function getRecommendedMvpTarget(project: Project, recent14Count: number | null)
 
 function getMvpProgress(project: Project, totalCount: number | null, recent14Count: number | null): number {
   if (project.status === "live") return 100;
-  if (!project.repoName) {
+  if (!project.repoName || isInternalProject(project)) {
     return STAGE_BASELINE_PROGRESS[project.stage];
   }
   if (totalCount === null) return 0;
@@ -153,7 +161,7 @@ function getMvpProgress(project: Project, totalCount: number | null, recent14Cou
 function getMvpLabel(project: Project, progress: number, loading: boolean): string {
   if (project.stage === "archive") return "Archive";
   if (project.status === "live" || progress >= 100) return "Live ✓";
-  if (!project.repoName) return `${STAGE_LABELS[project.stage]} · Ready`;
+  if (!project.repoName || isInternalProject(project)) return `${STAGE_LABELS[project.stage]} · Ready`;
   if (loading) return "Syncing...";
   return `${STAGE_LABELS[project.stage]} · ${progress}%`;
 }
@@ -161,6 +169,7 @@ function getMvpLabel(project: Project, progress: number, loading: boolean): stri
 function getMvpHint(project: Project, recent14Count: number | null): string {
   if (project.category === "archive") return "Proof-of-work archive";
   if (project.category === "featured") return "Core brand product";
+  if (isInternalProject(project)) return "Internal workflow system already supporting the portfolio";
   if (!project.repoName) return "Brand shell, naming, and product direction are already set";
   if (project.status === "live") return "MVP reached";
   const target = getRecommendedMvpTarget(project, recent14Count);
@@ -235,10 +244,11 @@ function FeaturedProjectCard({ project, index }: { project: Project; index: numb
 
 function RichProjectCard({ project, commitState }: { project: Project; commitState: CommitState }) {
   const cfg = statusConfig[project.status];
-  const repoName = REPO_MAP[project.slug];
+  const repoName = shouldShowRepoDetails(project) ? REPO_MAP[project.slug] : undefined;
   const progress = getMvpProgress(project, commitState.totalCount, commitState.recent14Count);
   const progressLabel = getMvpLabel(project, progress, commitState.loading);
   const progressHint = getMvpHint(project, commitState.recent14Count);
+  const readinessSignals = project.readinessSignals ?? [];
 
   return (
     <div className={project.featured ? "md:col-span-2" : ""}>
@@ -256,7 +266,7 @@ function RichProjectCard({ project, commitState }: { project: Project; commitSta
               </div>
             )}
           </div>
-          {commitState.totalCount !== null && (
+          {commitState.totalCount !== null && repoName && (
             <div className="text-right flex-shrink-0">
               <span className="text-base font-bold text-[#111111] leading-none">{commitState.totalCount}</span>
               <p className="text-[9px] text-[#8b857b]">commits</p>
@@ -282,6 +292,18 @@ function RichProjectCard({ project, commitState }: { project: Project; commitSta
         </div>
 
         <div className="flex flex-col gap-0.5 mb-4 flex-1">
+          {readinessSignals.length > 0 && (
+            <div className="mb-2 flex flex-wrap gap-2">
+              {readinessSignals.map((signal) => (
+                <span
+                  key={signal}
+                  className="rounded-full border border-[#ddd8cf] bg-[#f8f4ed] px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-[#7d6850]"
+                >
+                  {signal}
+                </span>
+              ))}
+            </div>
+          )}
           {commitState.loading && repoName && (
             <div className="space-y-2 py-1">
               {[0, 1, 2].map((i) => (
@@ -295,7 +317,7 @@ function RichProjectCard({ project, commitState }: { project: Project; commitSta
               ))}
             </div>
           )}
-          {!commitState.loading && commitState.commits.slice(0, 1).map((c, i) => (
+          {!commitState.loading && repoName && commitState.commits.slice(0, 1).map((c, i) => (
             <a
               key={c.sha}
               href={c.url}

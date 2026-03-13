@@ -26,6 +26,15 @@ function displayNameForRepo(repoName: string) {
   return repoName;
 }
 
+function isPublicRepo(repoName: string) {
+  if (repoName === "one-percent-better-landing") {
+    return true;
+  }
+
+  const matchedProject = projects.find((project) => project.repoName === repoName);
+  return matchedProject?.visibility !== "internal";
+}
+
 export async function GET() {
   const since = new Date();
   since.setUTCHours(0, 0, 0, 0);
@@ -94,6 +103,7 @@ export async function GET() {
     });
 
     const topRepos = Array.from(repoCounts.entries())
+      .filter(([repoName]) => isPublicRepo(repoName))
       .sort((a, b) => b[1] - a[1])
       .slice(0, 3)
       .map(([repoName, commits]) => ({
