@@ -90,32 +90,32 @@ const STAGE_LABELS: Record<ProjectStage, string> = {
 const CATEGORY_META: Record<ProjectCategory, { title: string; description: string }> = {
   featured: {
     title: "Current Product Work",
-    description: "Small product loops that show judgment, scope control, and active execution.",
+    description: "Small product loops that show judgment and active execution.",
   },
   poker: {
     title: "Poker Vertical",
-    description: "A separate specialist lane. It matters as proof of seriousness, but it does not lead the hiring story here.",
+    description: "A separate specialist lane. Visible, but not the main hiring story.",
   },
   ops: {
     title: "Operating Layer",
-    description: "The public site and internal systems that keep the surface current, useful, and verifiable.",
+    description: "The public site and internal systems behind the surface.",
   },
   archive: {
     title: "Archive / Proof of Work",
-    description: "Past work that stays visible as evidence of engineering depth without competing with the active build track.",
+    description: "Past work that keeps engineering depth visible.",
   },
 };
 
 const statusConfig: Record<ProjectStatus, { label: string; color: string; dot: string }> = {
   live: { label: "Live", color: "text-[#111111]", dot: "bg-[#111111]" },
-  building: { label: "Building", color: "text-[#5f5a52]", dot: "bg-[#5f5a52] animate-pulse" },
-  idea: { label: "Idea", color: "text-[#8b857b]", dot: "bg-[#8b857b]" },
+  building: { label: "Building", color: "text-[#6f5336]", dot: "bg-[#8a6f50] animate-pulse" },
+  idea: { label: "Idea", color: "text-[#8a6f50]", dot: "bg-[#b89a76]" },
 };
 
 const STATUS_BAR: Record<ProjectStatus, string> = {
   live: "bg-[#111111]",
-  building: "bg-[#5f5a52]",
-  idea: "bg-[#8b857b]",
+  building: "bg-[#8a6f50]",
+  idea: "bg-[#b89a76]",
 };
 
 const TECH_COLORS: Record<string, string> = {
@@ -187,12 +187,12 @@ function getMvpHint(project: Project, recent14Count: number | null): string {
 
 function TechBadge({ tag }: { tag: string }) {
   return (
-    <div title={tag} className="h-7 flex items-center gap-2 bg-[#f6f3ee] border border-[#ddd8cf] rounded-full px-3">
+    <div title={tag} className="h-7 flex items-center gap-2 rounded-full border border-[#ddcbb3] bg-[linear-gradient(180deg,#faf4ea_0%,#f2e6d6_100%)] px-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.55)]">
       <span
         className="w-1.5 h-1.5 rounded-full flex-shrink-0"
         style={{ backgroundColor: TECH_COLORS[tag] ?? "#8b857b" }}
       />
-      <span className="text-[10px] text-[#5f5a52] leading-none">{tag}</span>
+      <span className="text-[10px] text-[#6f5336] leading-none">{tag}</span>
     </div>
   );
 }
@@ -240,7 +240,6 @@ function FeaturedProjectCard({ project, index }: { project: Project; index: numb
           </div>
           <h3 className="mt-3 text-lg font-semibold text-[#111111]">{project.title}</h3>
           <p className="mt-2 max-w-xl text-sm leading-6 text-[#4f4a43]">{project.tagline}</p>
-          <p className="mt-3 max-w-xl text-sm leading-6 text-[#6a6258]">{project.description}</p>
         </div>
         <span className={`rounded-full border px-3 py-1 text-[10px] font-medium uppercase tracking-[0.18em] ${variants.badge}`}>
           {cfg.label}
@@ -248,15 +247,15 @@ function FeaturedProjectCard({ project, index }: { project: Project; index: numb
       </div>
       <div className="mt-6 flex flex-wrap items-end justify-between gap-3">
         <div className="flex flex-wrap gap-2">
-          <span className="rounded-full border border-[#ddd8cf] bg-[#fbf7f0] px-3 py-1 text-[10px] uppercase tracking-[0.16em] text-[#7d6850]">
+          <span className="rounded-full border border-[#d8c4a6] bg-[linear-gradient(180deg,#fcf7ee_0%,#f3e7d7_100%)] px-3 py-1 text-[10px] uppercase tracking-[0.16em] text-[#6f5336]">
             {stageLabel}
           </span>
-          <span className="rounded-full border border-[#ddd8cf] bg-[#fbf7f0] px-3 py-1 text-[10px] uppercase tracking-[0.16em] text-[#7d6850]">
+          <span className="rounded-full border border-[#d8c4a6] bg-[linear-gradient(180deg,#fcf7ee_0%,#f3e7d7_100%)] px-3 py-1 text-[10px] uppercase tracking-[0.16em] text-[#6f5336]">
             {repoVisibility}
           </span>
         </div>
         <div className="text-right">
-          <p className="text-[11px] uppercase tracking-[0.16em] text-[#8b857b]">{variants.note}</p>
+          <p className="text-[11px] uppercase tracking-[0.16em] text-[#8a6f50]">{variants.note}</p>
           {project.mvpEta && <p className="mt-1 text-[11px] text-[#8b857b]">{project.mvpEta}</p>}
         </div>
       </div>
@@ -266,23 +265,21 @@ function FeaturedProjectCard({ project, index }: { project: Project; index: numb
 
 function PokerVerticalCard() {
   return (
-    <div className="glass-panel rounded-[1.75rem] border border-[#ddd8cf] bg-[linear-gradient(135deg,#fbf7f1_0%,#f3ede3_100%)] p-6 shadow-[0_18px_60px_rgba(17,17,17,0.05)]">
+    <div className="glass-panel rounded-[1.75rem] border border-[#d8c3a4] bg-[radial-gradient(circle_at_top_left,rgba(195,166,125,0.18),transparent_42%),linear-gradient(135deg,#fbf7f1_0%,#f1e4d3_100%)] p-6 shadow-[0_18px_60px_rgba(17,17,17,0.05)]">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="max-w-2xl">
           <div className="flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-[#7d6850]" />
-            <p className="text-[10px] uppercase tracking-[0.22em] text-[#8b857b]">Separate specialist lane</p>
+            <span className="h-2 w-2 rounded-full bg-[#8a6f50]" />
+            <p className="text-[10px] uppercase tracking-[0.22em] text-[#8a6f50]">Separate specialist lane</p>
           </div>
           <h3 className="mt-3 text-xl font-semibold text-[#111111]">
             Poker remains visible, but secondary.
           </h3>
           <p className="mt-3 text-sm leading-7 text-[#5f5a52]">
-            1% Better.poker stays separate from the recruiter-facing story on this site.
-            It is relevant as proof that the work can support a serious vertical, but it
-            should earn more attention on its own surface.
+            1% Better.poker stays separate from the recruiter-facing story here.
           </p>
         </div>
-        <span className="rounded-full border border-[#ddd8cf] bg-[#fbf7f0] px-3 py-1 text-[10px] uppercase tracking-[0.16em] text-[#7d6850]">
+        <span className="rounded-full border border-[#d8c4a6] bg-[linear-gradient(180deg,#fcf7ee_0%,#f3e7d7_100%)] px-3 py-1 text-[10px] uppercase tracking-[0.16em] text-[#6f5336]">
           Not the main hiring story
         </span>
       </div>
@@ -300,7 +297,7 @@ function RichProjectCard({ project, commitState }: { project: Project; commitSta
 
   return (
     <div className={project.featured ? "md:col-span-2" : ""}>
-      <div className="glass-panel flex flex-col rounded-[1.75rem] p-6 transition-colors h-full border-[#ddd8cf] hover:border-[#b9b2a7]">
+      <div className="glass-panel flex h-full flex-col rounded-[1.75rem] border-[#ddd8cf] p-6 transition-colors hover:border-[#c6a880] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.75),0_20px_60px_rgba(17,17,17,0.05),0_8px_28px_rgba(138,111,80,0.08)]">
         <div className="flex items-start justify-between gap-3 mb-4">
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-0.5">
@@ -308,7 +305,7 @@ function RichProjectCard({ project, commitState }: { project: Project; commitSta
               <h3 className="text-sm font-semibold text-[#111111] truncate">{project.title}</h3>
             </div>
             {repoName && (
-              <div className="flex items-center gap-1.5 text-[10px] text-[#8b857b] pl-3.5">
+              <div className="flex items-center gap-1.5 pl-3.5 text-[10px] text-[#8a6f50]">
                 <GitBranch size={9} />
                 <span className="font-mono">{GH_OWNER}/{repoName}</span>
               </div>
@@ -323,7 +320,7 @@ function RichProjectCard({ project, commitState }: { project: Project; commitSta
         </div>
 
         <div className="mb-4">
-          <div className="flex justify-between text-[10px] text-[#8b857b] mb-1.5">
+          <div className="mb-1.5 flex justify-between text-[10px] text-[#8b857b]">
             <span className="truncate pr-2">{project.tagline}</span>
             <span className="flex-shrink-0">{progressLabel}</span>
           </div>
@@ -336,7 +333,7 @@ function RichProjectCard({ project, commitState }: { project: Project; commitSta
           {project.mvpEta && progress < 100 && (
             <p className="mt-2 text-[10px] text-[#8b857b]">{project.mvpEta}</p>
           )}
-          <p className="mt-1 text-[10px] text-[#b0a99d]">{progressHint}</p>
+          <p className="mt-1 text-[10px] text-[#a68a68]">{progressHint}</p>
         </div>
 
         <div className="flex flex-col gap-0.5 mb-4 flex-1">
@@ -345,7 +342,7 @@ function RichProjectCard({ project, commitState }: { project: Project; commitSta
               {readinessSignals.map((signal) => (
                 <span
                   key={signal}
-                  className="rounded-full border border-[#ddd8cf] bg-[#f8f4ed] px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-[#7d6850]"
+                  className="rounded-full border border-[#d8c4a6] bg-[linear-gradient(180deg,#fcf7ee_0%,#f3e7d7_100%)] px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-[#6f5336]"
                 >
                   {signal}
                 </span>
@@ -371,9 +368,9 @@ function RichProjectCard({ project, commitState }: { project: Project; commitSta
               href={c.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="group flex items-start gap-2.5 py-1.5 hover:bg-[#f1efea] rounded-lg px-1.5 -mx-1.5 transition-colors"
+              className="group -mx-1.5 flex items-start gap-2.5 rounded-lg px-1.5 py-1.5 transition-colors hover:bg-[#f5ede1]"
             >
-              <div className={`mt-1 w-1.5 h-1.5 rounded-full flex-shrink-0 ${i === 0 ? "bg-[#111111]" : "bg-[#b9b2a7]"}`} />
+              <div className={`mt-1 h-1.5 w-1.5 flex-shrink-0 rounded-full ${i === 0 ? "bg-[#8a6f50]" : "bg-[#c4b29a]"}`} />
               <div className="flex-1 min-w-0">
                 <p className={`text-xs truncate leading-snug ${i === 0 ? "text-[#111111]" : "text-[#5f5a52]"} group-hover:text-[#111111] transition-colors`}>
                   {c.message.split("\n")[0]}
@@ -387,7 +384,7 @@ function RichProjectCard({ project, commitState }: { project: Project; commitSta
                   </span>
                 </div>
               </div>
-              <ExternalLink size={10} className="mt-1 flex-shrink-0 text-[#8b857b] opacity-0 group-hover:opacity-100 transition-opacity" />
+              <ExternalLink size={10} className="mt-1 flex-shrink-0 text-[#8a6f50] opacity-0 transition-opacity group-hover:opacity-100" />
             </a>
           ))}
         </div>
@@ -480,15 +477,14 @@ export default function Projects() {
       <div className="relative max-w-6xl mx-auto">
         <div className="mb-10">
           <div className="flex items-center gap-2 mb-3">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#111111]" />
-            <p className="text-xs text-[#8b857b]">Selected work · linked activity</p>
+            <span className="h-1.5 w-1.5 rounded-full bg-[#8a6f50]" />
+            <p className="text-xs text-[#8a6f50]">Selected work · linked activity</p>
           </div>
           <h2 className="text-3xl md:text-5xl font-bold text-[#111111] tracking-tight">
             Selected work and public proof.
           </h2>
           <p className="mt-4 max-w-2xl text-sm leading-7 text-[#5f5a52]">
-            A few active product loops, the systems behind them, and archived work
-            that makes the engineering depth easy to trust.
+            Active product loops, supporting systems, and proof of work.
           </p>
         </div>
 

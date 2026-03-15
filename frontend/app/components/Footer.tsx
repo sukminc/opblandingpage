@@ -10,14 +10,14 @@ export default function Footer() {
           <BrandMark size="sm" showWordmark={true} subtitle="dev · public build surface" />
         </div>
         <div className="flex items-center gap-5">
-          <Link href="/about" className="text-xs text-[#8b857b] hover:text-[#111111] transition-colors">
+          <Link href="/about" className="text-xs text-[#8b857b] transition-colors hover:text-[#6f5336]">
             © 2026 1% Better
           </Link>
           <a
             href="https://linkedin.com/in/sukminyoon"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1.5 text-xs text-[#8b857b] hover:text-[#111111] transition-colors"
+            className="flex items-center gap-1.5 text-xs text-[#8b857b] transition-colors hover:text-[#6f5336]"
           >
             <Linkedin size={12} />
             sukminyoon
@@ -26,7 +26,7 @@ export default function Footer() {
             href="https://github.com/sukminc"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1.5 text-xs text-[#8b857b] hover:text-[#111111] transition-colors"
+            className="flex items-center gap-1.5 text-xs text-[#8b857b] transition-colors hover:text-[#6f5336]"
           >
             <Github size={12} />
             sukminc
