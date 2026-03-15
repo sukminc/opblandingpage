@@ -3,9 +3,8 @@
 ## What this is
 Public brand hub and shipping board for the 1% Better portfolio.
 
-- Primary role: show current projects, recent GitHub execution, and funding intent
+- Primary role: show current projects, recent GitHub execution, and hiring-first trust
 - Current deploy target: primary 1% Better landing domain
-- Long-term brand direction: `OnePercentBetter.now`
 - Local repo: `one-percent-better-landing`
 
 Rule: if a project is not listed in `frontend/app/data/projects.ts`, it is not an active public brand asset.
@@ -18,20 +17,10 @@ Chris S. Yoon · Senior Data Engineer & AI Builder · Toronto, ON
 
 ## Brand Strategy
 
-### Phase 1 — Now
 - Public story: data engineer + AI builder who ships fast
 - Emphasize proof of execution, not grand claims
 - The landing page is a live portfolio, not a static resume
-- Keep the core story centered on simple products, not bigger systems
-
-### Phase 2 — Post-MVP
-- Move public brand toward `OnePercentBetter.now`
-- Keep the umbrella brand broad: systems, automation, tooling, small products
-- Let simple shipping-first apps fund deeper products
-
-### Phase 3 — Long term
-- Split niche verticals into their own surfaces when they deserve it
-- Keep the main brand clean, general, and portfolio-first
+- Keep the dev surface centered on hiring and trust, not poker commercialization
 
 ## Projects Canon
 Current public projects live in `frontend/app/data/projects.ts`.
@@ -53,7 +42,7 @@ Public hierarchy matters:
 
 - `1% Better Today` is the core product.
 - `1% Better - Focus` supports the same thesis.
-- `1% Better - This Website` is the trust and distribution layer.
+- `1% Better - This Website` is the hiring and trust layer.
 - `1% Better - OS` is internal leverage and should not overpower the main public story.
 - Poker is a separate vertical, not the default face of the brand.
 

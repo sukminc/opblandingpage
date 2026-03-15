@@ -42,9 +42,9 @@ export const projects: Project[] = [
     slug: "this-website",
     repoName: "one-percent-better-landing",
     title: "1% Better - This Website",
-    tagline: "The public front door for funding, hiring, and the whole shipping story.",
+    tagline: "The public front door for hiring, trust, and the whole shipping story.",
     description:
-      "The live portfolio surface itself. Part frontend product, part operating layer, part proof that the build loop is real and active in public.",
+      "The live portfolio surface itself. Part frontend product, part operating layer, and part proof that the build loop is real and active in public for recruiters and hiring managers.",
     status: "live",
     repoType: "web-app",
     category: "ops",
@@ -59,7 +59,7 @@ export const projects: Project[] = [
     title: "1% Better - OS",
     tagline: "Workflow automation for repeatable project shipping.",
     description:
-      "An internal operating system for the 1% Better build loop. It already scaffolds new projects, audits sprint windows, syncs landing-page entries, checks README quality, and generates weekly operating reviews so the portfolio stays current without manual drift.",
+      "An internal operating system for the 1% Better build loop. It keeps the portfolio and recruiter-facing surfaces current without manual drift, while staying clearly internal.",
     status: "building",
     repoType: "automation",
     category: "ops",

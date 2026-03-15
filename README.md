@@ -2,7 +2,7 @@
 
 Public landing hub for the 1% Better portfolio.
 
-This repo powers the site that presents Chris Yoon's current projects, recent GitHub activity, and funding-first product story. It is not just a marketing page. It is meant to behave like a live operating board for the public-facing portfolio.
+This repo powers the site that presents Chris Yoon's current projects, recent GitHub activity, and hiring-first trust story. It is not just a marketing page. It is meant to behave like a live operating board for the public-facing portfolio.
 
 Shared strategy lives in:
 
@@ -32,8 +32,8 @@ Progress is intentionally heuristic. The goal is to show truthful momentum, not 
 ## Current Direction
 
 - simple, fast-shipping products stay near the center of the story
-- `1% Better Today` stays the clearest core product
-- poker projects should read as one explicit product family, not random side projects
+- dev repos should strengthen hiring and trust
+- poker should stay on its own domain and surface
 - archive work should support credibility without confusing the active brand
 - `1% Better - OS` belongs on the site because it is now part of the real build workflow
 - `1% Better - OS` should still read as internal leverage rather than the main public hero
